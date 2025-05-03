@@ -1,0 +1,4394 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apollo Tours - Cabo Verde</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <!-- Font Awesome para ícones de globo/seta -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>  
+
+/* Botao X do modal de reservas */
+.close {
+    cursor: pointer;
+    font-size: 24px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+} 
+
+/* Efeito de hover nos botões do modal de confirmação */
+
+button[onclick*="closest"]:hover {
+  background: #f5f5f5 !important;
+}
+
+
+/* Oculta todos os botões "Ver Fotos" */
+.info-button {
+    display: none !important;
+}
+    /* ===== ICONES DE RESERVA ===== */
+/* Container dos ícones de contato no modal de reserva */
+.icones-reserva {
+  display: flex;                /* Layout flexível para alinhar os ícones */
+  justify-content: center;      /* Centraliza horizontalmente */
+  gap: 25px;                    /* Espaço entre os ícones */
+  margin-top: 20px;             /* Margem superior */
+}
+
+/* Estilo base para cada ícone/link */
+.icone-link {
+  display: flex;                /* Flex para centralizar conteúdo */
+  align-items: center;          /* Centraliza verticalmente */
+  justify-content: center;      /* Centraliza horizontalmente */
+  width: 70px;                  /* Largura fixa */
+  height: 80px;                 /* Altura fixa (círculo perfeito) */
+  border-radius: 50%;           /* Bordas arredondadas (círculo) */
+  font-size: 24px;              /* Tamanho do ícone */
+  color: white;                 /* Cor do ícone */
+  text-decoration: none;        /* Remove sublinhado */
+  transition: all 0.3s;         /* Suaviza transições */
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1); /* Sombra sutil */
+}
+
+/* Efeito hover nos ícones */
+.icone-link:hover {
+  transform: translateY(-3px);  /* Levanta ligeiramente */
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2); /* Sombra mais pronunciada */
+}
+
+/* Cores específicas para cada ícone */
+.icone-link:nth-child(1) { background-color: #25D366; } /* WhatsApp (verde) */
+.icone-link:nth-child(2) { background-color: #3498db; } /* Telefone (azul) */
+.icone-link:nth-child(3) { background-color: #e74c3c; } /* E-mail (vermelho) */
+
+/* Tooltip que aparece ao passar o mouse */
+.icone-link::after {
+  content: attr(title);         /* Pega o texto do atributo title */
+  position: absolute;           /* Posicionamento absoluto */
+  bottom: -30px;                /* Posiciona abaixo do ícone */
+  left: 50%;                    /* Centraliza */
+  transform: translateX(-50%);  /* Ajuste fino de centralização */
+  background: #333;             /* Cor de fundo */
+  color: white;                 /* Cor do texto */
+  padding: 3px 8px;             /* Espaçamento interno */
+  border-radius: 4px;           /* Bordas arredondadas */
+  font-size: 12px;              /* Tamanho do texto */
+  opacity: 0;                   /* Inicialmente invisível */
+  transition: opacity 0.3s;     /* Animação de aparecimento */
+  white-space: nowrap;          /* Impede quebra de linha */
+}
+
+/* Mostra o tooltip no hover */
+.icone-link:hover::after {
+  opacity: 1;                   /* Torna visível */
+}
+
+/* ===== MODAL DE RESERVA ===== */
+/* Container principal do modal */
+#reservaModal .modal-content {
+  width: 90%;                   /* Largura responsiva */
+  max-width: 320px;             /* Largura máxima */
+  padding: 20px;                /* Espaçamento interno */
+  border-radius: 12px;          /* Bordas arredondadas */
+  background: white;            /* Fundo branco */
+  position: relative;           /* Para posicionar elementos filhos */
+}
+
+/* Estilo do texto que mostra o passeio selecionado */
+#passeioSelecionado {
+  font-weight: bold;            /* Texto em negrito */
+  margin: 10px 0;               /* Margens superior/inferior */
+  padding: 8px;                 /* Espaçamento interno */
+  background: #f8f9fa;          /* Cor de fundo sutil */
+  border-radius: 6px;           /* Bordas arredondadas */
+}
+
+/* Container das opções de reserva */
+.reserva-opcoes {
+  display: flex;                /* Layout flexível */
+  flex-direction: column;       /* Itens em coluna */
+  gap: 12px;                    /* Espaço entre itens */
+}
+
+/* Estilo de cada opção de reserva */
+.reserva-option {
+  padding: 12px;                /* Espaçamento interno */
+  border-radius: 8px;           /* Bordas arredondadas */
+  color: white;                 /* Texto branco */
+  text-decoration: none;        /* Remove sublinhado */
+  font-size: 14px;              /* Tamanho do texto */
+  display: flex;                /* Flex para alinhar ícone e texto */
+  align-items: center;          /* Centraliza verticalmente */
+  justify-content: center;      /* Centraliza horizontalmente */
+  transition: transform 0.2s;   /* Suaviza transformações */
+}
+
+/* Efeito hover nas opções */
+.reserva-option:hover {
+  transform: scale(1.02);       /* Aumenta ligeiramente */
+  opacity: 0.9;                 /* Leve transparência */
+}
+
+/* Estilo dos ícones dentro das opções */
+.reserva-option i {
+  margin-right: 10px;           /* Espaço à direita do ícone */
+  font-size: 18px;              /* Tamanho do ícone */
+}
+
+/* ===== DESTAQUE ANIMADO DO FOOTER ===== */
+/* Animação quando o footer é alvo de âncora (#footer) */
+#footer:target {
+    animation: highlight 2s;    /* Aplica animação por 2 segundos */
+}
+
+/* Definição da animação */
+@keyframes highlight {
+    0% { background-color: rgba(233, 30, 99, 0.1); } /* Início: fundo rosado */
+    100% { background-color: transparent; }          /* Fim: fundo transparente */
+}
+
+/* ===== MODAL GENÉRICO ===== */
+/* Estilo base do modal (fundo escuro) */
+.modal {
+  display: none;                /* Inicialmente oculto */
+  position: fixed;              /* Fixo na tela */
+  z-index: 1000;               /* Sobre tudo */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Fundo escuro semi-transparente */
+}
+
+/* Conteúdo do modal */
+.modal-content {
+  background-color: #fff;       /* Fundo branco */
+  margin: 5% auto;             /* Centraliza verticalmente com margem */
+  padding: 20px;                /* Espaçamento interno */
+  border-radius: 12px;          /* Bordas arredondadas */
+  width: 70%;                  /* Largura responsiva */
+  font-size: 12px;              /* Tamanho base do texto */
+  line-height: 1.6;             /* Espaçamento entre linhas */
+  color: #333;                 /* Cor do texto */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Sombra */
+}
+
+/* Títulos no modal */
+.modal-content h2 {
+  margin-top: 0;                /* Remove margem superior padrão */
+  font-size: 22px;              /* Tamanho grande */
+  color: #1a1a1a;              /* Cor escura */
+  text-align: center;           /* Centralizado */
+}
+
+/* Botão de fechar (×) */
+.modal-content .close {
+  color: #aaa;                 /* Cor cinza */
+  float: right;                /* Alinhado à direita */
+  font-size: 24px;             /* Tamanho grande */
+  font-weight: bold;           /* Negrito */
+  cursor: pointer;             /* Cursor de ponteiro */
+}
+
+/* Efeito hover no botão de fechar */
+.modal-content .close:hover {
+  color: #000;                 /* Preto ao passar mouse */
+}
+
+/* ===== FOOTER ===== */
+/* Estilo base do rodapé */
+footer {
+    background-color: #222;     /* Fundo escuro */
+    color: #fff;               /* Texto branco */
+    padding: 20px 0;           /* Espaçamento vertical */
+    text-align: center;         /* Texto centralizado */
+    font-size: 60%;            /* Tamanho reduzido */
+}
+
+/* Container interno do footer */
+footer .container {
+    width: 80%;                /* Largura responsiva */
+    margin: 0 auto;            /* Centralizado */
+}
+
+/* Títulos no footer */
+footer h2 {
+    font-size: 14px;           /* Tamanho médio */
+    margin-bottom: 5px;        /* Margem inferior pequena */
+    font-weight: bold;         /* Negrito */
+    color: #fff;              /* Branco */
+}
+
+/* Parágrafos no footer */
+footer p {
+    font-size: 9px;            /* Texto pequeno */
+    color: #bbb;              /* Cinza claro */
+    margin: 5px 0;            /* Margens reduzidas */
+    display: flex;             /* Flex para alinhar ícones */
+    align-items: center;      /* Centraliza verticalmente */
+    justify-content: center;  /* Centraliza horizontalmente */
+}
+
+/* Links no footer */
+footer a {
+    color: #bbb;              /* Cinza claro */
+    text-decoration: none;    /* Remove sublinhado */
+    transition: color 0.3s;   /* Suaviza mudança de cor */
+    font-size: 9px;           /* Tamanho pequeno */
+    display: inline-flex;     /* Flex inline para ícones */
+    align-items: center;      /* Alinha ícones e texto */
+}
+
+/* Ícones no footer */
+footer i {
+    font-size: 14px;          /* Tamanho médio */
+    margin: 0 5px;            /* Margens laterais */
+}
+
+/* Ícone do WhatsApp específico */
+footer .fab.fa-whatsapp {
+    color: #25D366;           /* Verde do WhatsApp */
+    font-size: 18px;          /* Tamanho maior */
+}
+
+/* Container dos ícones sociais */
+footer .social-icons {
+    display: flex;            /* Layout flexível */
+    justify-content: center; /* Centraliza */
+    gap: 15px;               /* Espaço entre ícones */
+    margin-top: 10px;        /* Margem superior */
+}
+
+/* Efeito hover nos ícones sociais */
+footer .social-icons a:hover {
+    color: #1dbf73;          /* Verde claro */
+}
+
+/* Texto de direitos autorais */
+footer .rights {
+    margin-top: 10px;        /* Margem superior */
+    font-size: 8px;          /* Texto muito pequeno */
+    color: #bbb;            /* Cinza claro */
+}
+
+/* ===== RESET E CONFIGURAÇÕES GERAIS ===== */
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;   /* Modelo de caixa mais intuitivo */
+    font-family: 'Arial', sans-serif; /* Fonte padrão */
+    -webkit-tap-highlight-color: transparent; /* Remove highlight em mobile */
+}
+
+/* Estilo do corpo */
+body {
+    background-color: #f5f5f5; /* Fundo cinza claro */
+    padding: 10px 0;          /* Pequeno espaçamento */
+    touch-action: pan-y;      /* Comportamento de toque */
+}
+
+/* Container principal */
+.container {
+    width: 100%;             /* Largura total */
+    margin: 0 auto;          /* Centralizado */
+    position: relative;      /* Para elementos filhos posicionados */
+    padding: 0 15px;         /* Espaçamento lateral */
+    max-width: 700px;        /* Largura máxima */
+}
+
+/* ===== TÍTULOS DE SEÇÃO ===== */
+.section-title {
+    text-align: center;      /* Centralizado */
+    margin-bottom: 3px;      /* Margem inferior mínima */
+    margin-top: 20px;        /* Margem superior padrão */
+    color: #2c3e50;         /* Azul escuro */
+    font-size: 1.2rem;      /* Tamanho médio */
+    font-weight: 600;       /* Semi-negrito */
+    padding: 0 10px;        /* Pequeno espaçamento lateral */
+    font-family: 'Helvetica', sans-serif; /* Fonte alternativa */
+}
+
+/* ===== COMPONENTE DE TOURS ===== */
+/* Wrapper dos tours */
+.tours-wrapper {
+    position: relative;      /* Para setas de navegação */
+    width: 100%;            /* Largura total */
+    margin: 0 auto;         /* Centralizado */
+}
+
+/* Container dos cards */
+.tours-container {
+    position: relative;     /* Para setas de navegação */
+    width: 100%;           /* Largura total */
+    overflow: hidden;      /* Esconde overflow */
+}
+
+/* Área rolável dos tours */
+.tours-scroll {
+    display: flex;         /* Layout flexível */
+    overflow-x: auto;     /* Rolagem horizontal */
+    gap: 10px;            /* Espaço entre cards */
+    padding: 10px 5px;    /* Pequeno espaçamento */
+    scroll-behavior: smooth; /* Rolagem suave */
+    -webkit-overflow-scrolling: touch; /* Rolagem suave em iOS */
+    -ms-overflow-style: none; /* Remove barra no IE */
+    scrollbar-width: none; /* Remove barra no Firefox */
+}
+
+/* Esconde a barra de rolagem no WebKit */
+.tours-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* ===== CARDS DE TOUR ===== */
+.tour-card {
+    background-color: #fff; /* Fundo branco */
+    border-radius: 12px;    /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    padding: 8px 4px;      /* Espaçamento interno reduzido */
+    min-width: 60%;        /* Largura mínima (mobile first) */
+    flex: 0 0 auto;        /* Não cresce/não encolhe */
+    text-align: center;    /* Texto centralizado */
+    transition: transform 0.2s; /* Animação de transformação */
+}
+
+/* Título do card */
+.tour-title {
+    font-size: 0.9rem;     /* Tamanho pequeno */
+    font-weight: 700;      /* Negrito */
+    color: #2c3e50;       /* Azul escuro */
+    margin-bottom: 8px;    /* Pequena margem inferior */
+    line-height: 1.3;      /* Espaçamento entre linhas */
+}
+
+/* Lista de destaques */
+.tour-highlights {
+    display: flex;         /* Layout flexível */
+    flex-direction: column; /* Itens em coluna */
+    gap: 5px;             /* Espaço reduzido entre itens */
+    margin-bottom: 8px;   /* Pequena margem inferior */
+}
+
+/* Item individual de destaque */
+.highlight-item {
+    display: flex;         /* Para alinhar ícone e texto */
+    align-items: center;   /* Centraliza verticalmente */
+    font-size: 0.75rem;   /* Texto muito pequeno */
+    color: #34495e;       /* Azul mais claro */
+    text-align: left;     /* Alinhamento à esquerda */
+}
+
+/* Ícones nos destaques */
+.highlight-item i {
+    margin-right: 6px;    /* Espaço à direita */
+    color: #e74c3c;      /* Vermelho */
+    min-width: 18px;     /* Largura mínima */
+    font-size: 0.8rem;   /* Tamanho pequeno */
+}
+
+/* ===== BOTÕES ===== */
+/* Container dos botões */
+.buttons-container {
+    display: flex;          /* Layout flexível */
+    flex-direction: column; /* Em coluna */
+    gap: 6px;              /* Pequeno espaço */
+    margin-top: 8px;       /* Pequena margem superior */
+}
+
+/* Estilo base dos botões */
+.info-button, .book-button {
+    border: none;          /* Sem borda */
+    padding: 7px;          /* Espaçamento interno */
+    border-radius: 20px;   /* Bordas muito arredondadas */
+    font-size: 0.8rem;    /* Tamanho pequeno */
+    font-weight: 600;     /* Semi-negrito */
+    cursor: pointer;      /* Cursor de ponteiro */
+    transition: all 0.2s; /* Animação suave */
+    width: 100%;         /* Largura total */
+}
+
+/* Botão de informações */
+.info-button {
+    background-color: #3498db; /* Azul */
+    color: white;             /* Texto branco */
+}
+
+/* Efeito hover no botão de informações */
+.info-button:hover, .info-button:active {
+    background-color: #2980b9; /* Azul mais escuro */
+}
+
+/* Botão de reserva */
+.book-button {
+    background-color: #e74c3c; /* Vermelho */
+    color: white;             /* Texto branco */
+}
+
+/* Efeito hover no botão de reserva */
+.book-button:hover, .book-button:active {
+    background-color: #c0392b; /* Vermelho mais escuro */
+}
+
+/* ===== SETAS DE ROLAGEM ===== */
+.scroll-arrow {
+    position: absolute;    /* Posicionamento absoluto */
+    top: 50%;             /* Centralizado verticalmente */
+    transform: translateY(-50%); /* Ajuste fino */
+    width: 30px;          /* Largura */
+    height: 30px;         /* Altura (círculo perfeito) */
+    background-color: rgba(255, 255, 255, 0.9); /* Branco semi-transparente */
+    border-radius: 50%;   /* Círculo perfeito */
+    display: flex;        /* Para centralizar ícone */
+    align-items: center;  /* Centraliza verticalmente */
+    justify-content: center; /* Centraliza horizontalmente */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Sombra */
+    cursor: pointer;      /* Cursor de ponteiro */
+    z-index: 10;         /* Sobre os cards */
+    border: none;        /* Sem borda */
+    font-size: 1rem;    /* Tamanho do ícone */
+    color: #e74c3c;    /* Vermelho */
+    opacity: 0.9;      /* Leve transparência */
+}
+
+/* Seta esquerda */
+.scroll-arrow.left {
+    left: 5px;          /* Posicionada à esquerda */
+}
+
+/* Seta direita */
+.scroll-arrow.right {
+    right: 5px;         /* Posicionada à direita */
+}
+
+/* Efeito ao clicar */
+.scroll-arrow:active {
+    transform: translateY(-50%) scale(0.95); /* Efeito de pressionar */
+}
+
+
+
+/* ===== MENU PRINCIPAL ===== */
+/* Container do menu */
+.kreol-menu {
+    display: flex;           /* Layout flexível */
+    justify-content: center; /* Centraliza itens */
+    flex-wrap: wrap;        /* Quebra linha se necessário */
+    gap: 10px;             /* Espaço entre itens */
+    padding: 10px 15px;    /* Espaçamento interno */
+    margin: 10px auto 25px; /* Margens */
+    max-width: 95%;       /* Largura máxima */
+}
+
+/* Botões do menu */
+.menu-btn {
+    background-color: #3498db; /* Azul */
+    color: white;             /* Texto branco */
+    border: none;            /* Sem borda */
+    padding: 8px 16px;      /* Espaçamento interno */
+    border-radius: 20px;    /* Bordas muito arredondadas */
+    font-size: 0.8rem;     /* Tamanho pequeno */
+    font-weight: 600;      /* Semi-negrito */
+    cursor: pointer;       /* Cursor de ponteiro */
+    transition: all 0.2s; /* Animação suave */
+    text-decoration: none; /* Remove sublinhado */
+    white-space: nowrap;  /* Impede quebra de linha */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra sutil */
+}
+
+/* Efeito hover nos botões */
+.menu-btn:hover {
+    background-color: #2980b9; /* Azul mais escuro */
+    transform: translateY(-2px); /* Levanta ligeiramente */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Sombra mais pronunciada */
+}
+
+/* Estado ativo do botão */
+.menu-btn.active {
+    background-color: #2c3e50; /* Azul muito escuro */
+    box-shadow: none;         /* Remove sombra */
+}
+
+/* ===== RESPONSIVIDADE ===== */
+/* Telas médias (tablets) */
+@media (min-width: 768px) {
+    .container {
+        max-width: 600px; /* Largura maior */
+    }
+    
+    .tour-card {
+        min-width: calc(50% - 15px); /* Dois cards por linha */
+    }
+
+    .scroll-arrow {
+        width: 35px;      /* Setas maiores */
+        height: 35px;
+    }
+}
+
+/* Telas grandes (desktops) */
+@media (min-width: 992px) {
+    .container {
+        max-width: 700px; /* Largura máxima */
+    }
+    
+    .tour-card {
+        min-width: calc(33.333% - 20px); /* Três cards por linha */
+    }
+}
+
+/* Telas pequenas (mobile) */
+@media (max-width: 600px) {
+    .kreol-menu {
+        gap: 6px;         /* Espaço menor entre itens */
+        padding: 8px 10px; /* Espaçamento interno reduzido */
+    }
+    .menu-btn {
+        padding: 6px 12px; /* Espaçamento interno menor */
+        font-size: 0.75rem; /* Texto menor */
+    }
+}
+
+/* Container principal - posicionamento relativo para o dropdown absoluto */
+.language-selector {
+  position: relative; /* Permite posicionamento absoluto dos filhos */
+  margin: 10px auto; /* Centraliza horizontalmente */
+  width: fit-content; /* Ajusta largura ao conteúdo */
+  z-index: 1000; /* Garante que fique acima de outros elementos */
+}
+
+/* =============================================
+   ESTILO DO BOTÃO PRINCIPAL DO SELETOR DE IDIOMAS
+   ============================================= */
+.language-current {
+  /* Cor de fundo azul - mantém identidade visual do site */
+  background: #3498db;
+  
+  /* Cor do texto branco para contraste */
+  color: white;
+  
+  /* Remove borda padrão de botões */
+  border: none;
+  
+  /* Espaçamento interno reduzido (topo/baixo 4px, laterais 10px) */
+  padding: 4px 10px;
+  
+  /* Bordas completamente arredondadas (cápsula) */
+  border-radius: 20px;
+  
+  /* Cursor pointer indica elemento clicável */
+  cursor: pointer;
+  
+  /* Layout flex para alinhar ícone e texto */
+  display: flex;
+  
+  /* Centraliza verticalmente os itens */
+  align-items: center;
+  
+  /* Espaço entre ícone e texto reduzido */
+  gap: 4px;
+  
+  /* Tamanho de fonte pequeno para componente compacto */
+  font-size: 0.75rem;
+  
+  /* Transição suave para efeitos hover/focus */
+  transition: all 0.3s;
+  
+  /* Sombra sutil para profundidade visual */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* =============================================
+   ESTILO DOS ÍCONES DENTRO DO BOTÃO PRINCIPAL
+   ============================================= */
+.language-current i {
+  /* Tamanho dos ícones relativo ao texto (80% do tamanho da fonte) */
+  font-size: 0.8em;
+}
+
+/* =============================================
+   ESTILO DA LISTA SUSPENSA (DROPDOWN) DE IDIOMAS
+   ============================================= */
+.language-dropdown {
+  /* Posicionamento absoluto em relação ao container pai */
+  position: absolute;
+  
+  /* Posiciona logo abaixo do botão principal */
+  top: 100%;
+  left: 0;
+  
+  /* Largura reduzida do dropdown */
+  width: 140px;
+  
+  /* Fundo branco para melhor legibilidade */
+  background: white;
+  
+  /* Cantos arredondados suaves */
+  border-radius: 10px;
+  
+  /* Sombra mais pronunciada para efeito de elevação */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  
+  /* Remove marcadores de lista padrão */
+  list-style: none;
+  
+  /* Espaçamento vertical interno reduzido */
+  padding: 8px 0;
+  
+  /* Pequena margem superior para separação visual */
+  margin-top: 5px;
+  
+  /* Inicialmente transparente/invisível */
+  opacity: 0;
+  visibility: hidden;
+  
+  /* Transição suave para animação de aparecimento */
+  transition: all 0.3s;
+  
+  /* Tamanho de fonte reduzido para compactação */
+  font-size: 0.8rem;
+}
+
+/* =============================================
+   ESTILO DAS BANDEIRAS DOS IDIOMAS
+   ============================================= */
+.flag-icon {
+  /* Largura reduzida da bandeira */
+  width: 16px;
+  
+  /* Altura proporcional */
+  height: 12px;
+  
+  /* Espaço à direita da bandeira (antes do texto) */
+  margin-right: 8px;
+  
+  /* Cantos levemente arredondados */
+  border-radius: 2px;
+  
+  /* Sombra sutil para dar profundidade às bandeiras */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Animação da seta do dropdown */
+.fa-chevron-down {
+  font-size: 0.8rem; /* Tamanho um pouco menor */
+  transition: transform 0.3s; /* Anima a rotação */
+}
+
+/* Gira a seta quando dropdown está aberto */
+.language-selector:hover .fa-chevron-down {
+  transform: rotate(180deg); /* Rotação de 180 graus */
+}
+
+
+/* =========== ESTILOS DO SELETOR DE IDIOMAS =========== */
+
+/* Container da lista suspensa */
+.language-dropdown {
+  max-height: 300px; /* Altura máxima antes de aparecer scroll */
+  overflow-y: auto; /* Habilita scroll vertical se necessário */
+  scrollbar-width: thin; /* Estilo fino para navegadores modernos */
+}
+
+/* Personalização da scrollbar para WebKit (Chrome/Safari) */
+.language-dropdown::-webkit-scrollbar {
+  width: 6px; /* Largura da scrollbar */
+}
+.language-dropdown::-webkit-scrollbar-thumb {
+  background: #ccc; /* Cor do "ponteiro" */
+  border-radius: 3px; /* Bordas arredondadas */
+}
+
+/* Itens da lista de idiomas */
+.language-dropdown li {
+  padding: 8px 15px; /* Espaçamento interno */
+  transition: background 0.2s; /* Transição suave ao passar o mouse */
+}
+
+/* Efeito hover nos itens */
+.language-dropdown li:hover {
+  background: #f5f5f5; /* Cor de fundo ao passar o mouse */
+}
+
+/* Links dos idiomas */
+.language-dropdown a {
+  color: #333; /* Cor do texto */
+  text-decoration: none; /* Remove sublinhado */
+  display: flex; /* Layout flex para alinhar ícone e texto */
+  align-items: center; /* Centraliza verticalmente */
+  gap: 8px; /* Espaço entre ícone e texto */
+}
+
+/* Efeito hover nos links */
+.language-dropdown a:hover {
+  color: #0066cc; /* Muda cor do texto ao passar mouse */
+}
+
+/* Estilo das bandeiras (gerado pela classe flag-icon) */
+.flag-icon {
+  width: 16px; /* Largura fixa */
+  height: 12px; /* Altura proporcional */
+  border-radius: 2px; /* Cantos levemente arredondados */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Sombra sutil */
+}
+
+
+</style>
+
+
+
+</head>
+<body>
+
+<div style="text-align: center; margin-top: 6px; margin-bottom: -5px; position: relative; overflow: hidden;">
+    <h1 id="pinterestTitle" style="font-family: 'Montserrat', cursive; font-size: 1.6rem; color: #2c3e50; margin: 0; position: relative; display: inline-block; padding: 0 10px; transition: all 0.3s ease;">
+        Tarrafal Tourism
+        <span style="content: ''; position: absolute; bottom: -3px; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, #e74c3c, #3498db); transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease;"></span>
+    </h1>
+</div>
+
+<style>
+    #pinterestTitle:hover {
+        transform: translateY(-2px);
+        text-shadow: 0 2px 8px rgba(44, 62, 80, 0.2);
+    }
+    
+    #pinterestTitle:hover span {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+    
+    @keyframes floatParticle {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const title = document.getElementById('pinterestTitle');
+        const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f'];
+        
+        // Criar partículas ao carregar
+        for (let i = 0; i < 8; i++) {
+            setTimeout(() => createParticle(title), i * 200);
+        }
+        
+        // Criar partículas ao passar o mouse
+        title.addEventListener('mouseenter', function() {
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => createParticle(title), i * 150);
+            }
+        });
+        
+        function createParticle(element) {
+            const particle = document.createElement('div');
+            const rect = element.getBoundingClientRect();
+            const size = Math.random() * 6 + 2;
+            
+            particle.style.position = 'absolute';
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.borderRadius = '50%';
+            particle.style.left = `${rect.left + rect.width/2 - size/2}px`;
+            particle.style.top = `${rect.top + rect.height}px`;
+            particle.style.pointerEvents = 'none';
+            particle.style.zIndex = '10';
+            particle.style.opacity = '0.7';
+            particle.style.animation = `floatParticle ${Math.random() * 2 + 1}s ease-out forwards`;
+            
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 1000);
+        }
+    });
+</script>
+
+<div class="language-selector-wrapper">
+  <div id="google_translate_element"></div>
+</div>
+
+<style>
+/* ========== ESTILOS PREMIUM ========== */
+.language-selector-wrapper {
+  position: relative;
+  margin: 15px 0;
+  z-index: 1000;
+}
+
+/* Container principal customizado */
+.goog-te-gadget {
+  font-family: 'Montserrat', sans-serif !important;
+  display: inline-block !important;
+}
+
+/* Esconde o texto "Traduzir" */
+.goog-te-gadget .goog-te-combo {
+  margin: 0 !important;
+}
+
+/* Estilização premium do seletor */
+.goog-te-combo {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  padding: 10px 35px 10px 15px !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 25px !important;
+  background-color: #fff !important;
+  color: #333 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08) !important;
+  transition: all 0.3s ease !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+  background-size: 16px !important;
+}
+
+/* Efeitos de interação */
+.goog-te-combo:hover {
+  border-color: #3498db !important;
+  box-shadow: 0 4px 12px rgba(52,152,219,0.15) !important;
+}
+
+.goog-te-combo:focus {
+  outline: none;
+  border-color: #3498db !important;
+  box-shadow: 0 0 0 3px rgba(52,152,219,0.2) !important;
+}
+
+/* Dropdown estilizado */
+.goog-te-menu-frame {
+  min-width: 180px !important;
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12) !important;
+  margin-top: 5px !important;
+  transform: translateX(-10px);
+}
+
+.goog-te-menu2 {
+  background-color: #fff !important;
+  border-radius: 8px !important;
+}
+
+.goog-te-menu2-item {
+  padding: 10px 16px !important;
+  color: #333 !important;
+  font-size: 14px !important;
+  transition: background 0.2s;
+}
+
+.goog-te-menu2-item:hover {
+  background: #f8f9fa !important;
+  color: #3498db !important;
+}
+
+.goog-te-menu2-item-selected {
+  background: #f1f8fe !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .goog-te-combo {
+    padding: 8px 30px 8px 12px !important;
+    font-size: 13px !important;
+  }
+}
+
+/* Estilo principal para o conteúdo do modal de reservas */
+#reservaModal .modal-content {
+    padding: 25px;                 /* Espaçamento interno para o conteúdo do modal */
+    border-radius: 12px;           /* Bordas arredondadas para um visual mais suave */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* Sombra para efeito de elevação/sobreposição */
+}
+
+/* Container para os ícones de opções de reserva */
+.icones-reserva {
+    display: flex;                  /* Layout flexível para organizar os ícones */
+    justify-content: space-around;  /* Distribui os ícones igualmente no espaço disponível */
+    margin: 20px 0;                 /* Margem superior e inferior para separação visual */
+}
+
+/* Estilo para cada link/ícone individual */
+.icone-link {
+    display: flex;                  /* Layout flexível para o conteúdo do ícone */
+    flex-direction: column;         /* Organiza itens verticalmente (ícone acima do texto) */
+    align-items: center;           /* Centraliza os itens horizontalmente */
+    text-decoration: none;         /* Remove sublinhado padrão de links */
+    color: #333;                   /* Cor do texto escura mas não preta pura */
+    transition: transform 0.3s;    /* Suaviza a animação de transformação no hover */
+}
+
+/* Efeito quando o mouse passa sobre um ícone */
+.icone-link:hover {
+    transform: scale(1.1);         /* Aumenta ligeiramente o tamanho do ícone */
+}
+
+/* Estilo para o elemento de ícone (provavelmente usando Font Awesome ou similar) */
+.icone-link i {
+    font-size: 28px;               /* Tamanho generoso para os ícones */
+    margin-bottom: 5px;            /* Pequeno espaçamento entre ícone e texto */
+}
+
+</style>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'pt',
+    includedLanguages: 'en,es,fr,de,it,ja,zh,ru',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false,
+    multilanguagePage: false
+  }, 'google_translate_element');
+
+  // Remove o texto "Select Language" após carregamento
+  setTimeout(function() {
+    const select = document.querySelector('.goog-te-combo');
+    if (select) {
+      select.title = 'Selecione o idioma';
+      const options = select.querySelectorAll('option');
+      options.forEach(opt => {
+        opt.textContent = opt.textContent.replace('(.*?) - ', ''); // Remove prefixos
+      });
+    }
+  }, 1000);
+}
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+
+<!-- MenuBaxoLogo -->
+<div class="kreol-menu">
+    <a href="#home" class="menu-btn">Home</a>
+    <a href="#trilhas-tarrafal" class="menu-btn active">Trilhas</a>
+    <a href="#viagem-tempo" class="menu-btn">História</a>
+    <a href="#actividade-carro" class="menu-btn">Actividade com Carro</a>
+    <a href="#vida-local" class="menu-btn">Comunidade</a>
+    <a href="#gastronomia-sabores" class="menu-btn">Gastronomia</a>
+    <a href="#experiencias-culturais" class="menu-btn">Cultura</a>
+    <a href="#atividades-aquaticas" class="menu-btn">Aquáticas</a>
+    <a href="#beleza-estetica" class="menu-btn">Beleza e Estética</a>
+    <a href="#massoterapia-relaxamento" class="menu-btn">Massoterapia</a>
+    <a href="#terapias-complementares" class="menu-btn">Terapias</a>
+    <a href="#servicos-premium" class="menu-btn" style="background: #e74c3c;"> <i class="fas fa-crown"></i> Premium</a>
+    <a href="#" class="menu-btn" id="openBlogModal">Sobre Nós</a> <!-- Novo item adicionado -->
+</div>
+</div>
+
+<!-- 
+  =============================================
+  SEÇÃO PRINCIPAL - TRILHAS DO TARRAFAL 
+  =============================================
+  Esta seção exibe cards roláveis com diferentes opções de trilhas
+-->
+<div class="container" id="trilhas-tarrafal">
+    <!-- Título principal da seção -->
+    <h1 class="section-title">Trilhas do Tarrafal</h1>
+    
+    <!-- Container principal dos cards de tour -->
+    <div class="tours-wrapper">
+        <!-- Container interno que envolve os cards e setas de navegação -->
+        <div class="tours-container">
+            <!-- 
+              SETA DE NAVEGAÇÃO ESQUERDA 
+              - Botão para rolar para trás
+              - Usa ícone Font Awesome (chevron-left)
+              - Chama função scrollTours com direção -1 (esquerda)
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow left" onclick="scrollTours(-1, 'tours-scroll-3')" aria-label="Voltar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- 
+              CONTAINER ROLÁVEL DE CARDS 
+              - ID único para referência no JavaScript
+              - Classe tours-scroll aplica estilos de rolagem horizontal
+            -->
+            <div class="tours-scroll" id="tours-scroll-3">
+                
+
+<!-- INÍCIO DO CARD - SERRA MALAGUETA: GONGON → HORTALÃO -->
+<div class="tour-card" style="border-top: 3px solid #e67e22;">  <!-- Laranja para trilhas desafiadoras -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-mountain" style="color: #e67e22;"></i> Serra Malagueta: Gongon → Hortalão
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DIFICULDADE -->
+        <div class="highlight-item">
+            <i class="fas fa-signal"></i> Dificuldade: Moderada
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 4-5 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 13 km
+        </div>
+        
+        <!-- REFEIÇÃO -->
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço tradicional incluído
+        </div>
+        
+        <!-- VISTAS PANORÂMICAS -->
+        <div class="highlight-item">
+            <i class="fas fa-binoculars"></i> Vistas panorâmicas
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 75€</span>
+                <span><i class="fas fa-user-friends"></i> 100€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 180€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+<!-- INÍCIO DO CARD - SERRA MALAGUETA: RIBEIRA PRINCIPAL -->
+<div class="tour-card" style="border-top: 3px solid #3498db;">  <!-- Azul para trilhas com água -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-water" style="color: #3498db;"></i> Serra Malagueta: Ribeira Principal
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DIFICULDADE -->
+        <div class="highlight-item">
+            <i class="fas fa-signal"></i> Dificuldade: Moderada
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 3h30min
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 7 km
+        </div>
+        
+        <!-- REFEIÇÃO -->
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço tradicional incluído
+        </div>
+        
+        <!-- DESTAQUE RIBEIRA -->
+        <div class="highlight-item">
+            <i class="fas fa-stream"></i> Trilha ao longo do curso d'água
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 75€</span>
+                <span><i class="fas fa-user-friends"></i> 100€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 180€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+<!-- INÍCIO DO CARD - SERRA MALAGUETA: XAXÁ → GONGON -->
+<div class="tour-card" style="border-top: 3px solid #e67e22;">  <!-- Laranja para trilhas desafiadoras -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-mountain" style="color: #e67e22;"></i> Serra Malagueta: Xaxá → Gongon
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DIFICULDADE -->
+        <div class="highlight-item">
+            <i class="fas fa-signal"></i> Dificuldade: Moderada/Intensa
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 4-5 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 14 km
+        </div>
+        
+        <!-- REFEIÇÃO -->
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço tradicional incluído
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 75€</span>
+                <span><i class="fas fa-user-friends"></i> 100€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 180€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+<!-- INÍCIO DO CARD - SERRA MALAGUETA → ESPINHO BRANCO (RABELADOS) -->
+<div class="tour-card" style="border-top: 3px solid #e67e22;">  <!-- Laranja para trilhas moderadas -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-hiking" style="color: #e67e22;"></i> Serra Malagueta → Espinho Branco (Rabelados)
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DIFICULDADE -->
+        <div class="highlight-item">
+            <i class="fas fa-signal"></i> Dificuldade: Moderada
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 5-6 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 15 km
+        </div>
+        
+        <!-- REFEIÇÃO -->
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço tradicional incluído
+        </div>
+        
+        <!-- CULTURA RABELADOS -->
+        <div class="highlight-item">
+            <i class="fas fa-landmark"></i> Experiência cultural com os Rabelados
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 80€</span>
+                <span><i class="fas fa-user-friends"></i> 100€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 160€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+<!-- INÍCIO DO CARD - TRÁS OS MONTES (POTTERY) → TARRAFAL BEACH -->
+<div class="tour-card" style="border-top: 3px solid #8B4513;">  <!-- Terracotta color border -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-mountain" style="color: #8B4513;"></i> Trás os Montes (Pottery) → Tarrafal Beach
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- TIPO DE EXPERIÊNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-hands"></i> Experiência: Cultural + Praia
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 4-5 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 14 km
+        </div>
+        
+        <!-- REFEIÇÃO -->
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço regional incluído
+        </div>
+        
+        <!-- PREÇOS COM ÍCONES -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 75€</span>
+                <span><i class="fas fa-user-friends"></i> 100€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 180€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+
+<!-- INÍCIO DO CARD - SERRA MALAGUETA → ESPINHO BRANCO (RABELADOS) -->
+<div class="tour-card" style="border-top: 3px solid #2E8B57;">  <!-- Verde floresta para trilha -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-tree" style="color: #2E8B57;"></i> Serra Malagueta → Espinho Branco (Rabelados)
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- TIPO DE EXPERIÊNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-hiking"></i> Experiência: Trilha + Cultura Rabelados
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 5-6 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 15 km
+        </div>
+        
+        <!-- REFEIÇÃO -->
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço tradicional incluído
+        </div>
+        
+        <!-- PREÇOS COM ÍCONES -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 80€</span>
+                <span><i class="fas fa-user-friends"></i> 100€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 160€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+<!-- INÍCIO DO CARD - SERRA MALAGUETA → RIBEIRA DA PRATA -->
+<div class="tour-card" style="border-top: 3px solid #2E8B57;">  <!-- Verde floresta para trilha -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-tree" style="color: #2E8B57;"></i> Serra Malagueta → Ribeira da Prata
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- TIPO DE EXPERIÊNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-hiking"></i> Experiência: Trilha + Natureza Costeira
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 5-6 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 15 km
+        </div>
+        
+        <!-- REFEIÇÃO -->
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço tradicional incluído
+        </div>
+        
+        <!-- PREÇOS COM ÍCONES -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 80€</span>
+                <span><i class="fas fa-user-friends"></i> 110€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 140€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+<!-- INÍCIO DO CARD - RIBEIRA DA BARCA → ÁGUAS BELAS (CAVE) -->
+<div class="tour-card" style="border-top: 3px solid #1E90FF;">  <!-- Azul oceano para gruta/costa -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-water" style="color: #1E90FF;"></i> Ribeira da Barca → Águas Belas (Cave)
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- TIPO DE EXPERIÊNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-shoe-prints"></i> Experiência: Natureza + Gruta Marinha
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 5-6 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 15 km
+        </div>
+        
+        <!-- REFEIÇÃO -->
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço tradicional incluído
+        </div>
+        
+        <!-- PREÇOS COM ÍCONES -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 110€</span>
+                <span><i class="fas fa-user-friends"></i> 140€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 240€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+<!-- INÍCIO DO CARD - GRAÇIOSA MOUNTAIN -->
+<div class="tour-card" style="border-top: 3px solid #2ecc71;">  <!-- Verde para montanha -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-mountain" style="color: #2ecc71;"></i> Graciosa Mountain
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- TIPO DE EXPERIÊNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-hiking"></i> Experiência: Trekking na Montanha
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 3 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 8 km
+        </div>
+        
+        <!-- PREÇOS COM ÍCONES -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 45€</span>
+                <span><i class="fas fa-user-friends"></i> 60€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 100€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+<!-- INÍCIO DO CARD - TARRAFAL BEACH → LIGHTHOUSE -->
+<div class="tour-card" style="border-top: 3px solid #3498db;">  <!-- Azul claro para praia/farol -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-umbrella-beach" style="color: #3498db;"></i> Tarrafal Beach → Lighthouse
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- TIPO DE EXPERIÊNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-water"></i> Experiência: Praia + Farol Histórico
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 3 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 7 km
+        </div>
+        
+        <!-- PREÇOS COM ÍCONES -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 45€</span>
+                <span><i class="fas fa-user-friends"></i> 60€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 100€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+
+<!-- INÍCIO DO CARD - SERRA MALAGUETA → LAGOA → MATO BRASIL -->
+<div class="tour-card" style="border-top: 3px solid #27ae60;">  <!-- Verde-escuro para trilha natural -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-tree" style="color: #27ae60;"></i> Serra Malagueta → Lagoa → Mato Brasil
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- TIPO DE EXPERIÊNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-leaf"></i> Experiência: Trilha Ecológica + Natureza
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 4-5 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 7 km
+        </div>
+        
+        <!-- DESTAQUE EXTRA (opcional) -->
+        <div class="highlight-item">
+            <i class="fas fa-binoculars"></i> Destaque: Vida selvagem & vistas panorâmicas
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 70€</span>
+                <span><i class="fas fa-user-friends"></i> 90€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 160€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+<!-- INÍCIO DO CARD - SERRA MALAGUETA → LAGOA → SERRA MALAGUETA (CIRCULAR) -->
+<div class="tour-card" style="border-top: 3px solid #16a085;">  <!-- Verde-água para rota circular -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-sync-alt" style="color: #16a085;"></i> Serra Malagueta → Lagoa → Serra Malagueta
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- TIPO DE EXPERIÊNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-mountain"></i> Experiência: Trilha Circular na Montanha
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 4-5 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 8 km
+        </div>
+        
+        <!-- DESTAQUE EXTRA -->
+        <div class="highlight-item">
+            <i class="fas fa-retweet"></i> Rota Circular: Retorno pelo mesmo maciço
+        </div>
+        
+        <!-- DIFICULDADE -->
+        <div class="highlight-item">
+            <i class="fas fa-signal"></i> Dificuldade: Moderada
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 70€</span>
+                <span><i class="fas fa-user-friends"></i> 100€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 180€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+<!-- INÍCIO DO CARD - PARQUE NATURAL -->
+<div class="tour-card" style="border-top: 3px solid #2ecc71;">  <!-- Verde vibrante para natureza -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-paw" style="color: #2ecc71;"></i> Parque Natural
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- TIPO DE EXPERIÊNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-tree"></i> Experiência: Trilha Ecológica
+        </div>
+        
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 3 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 8 km
+        </div>
+        
+        <!-- DESTAQUES NATUREZA -->
+        <div class="highlight-item">
+            <i class="fas fa-binoculars"></i> Observação de Vida Selvagem
+        </div>
+        
+        <!-- FLORA -->
+        <div class="highlight-item">
+            <i class="fas fa-seedling"></i> Vegetação Endêmica
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 70€</span>
+                <span><i class="fas fa-user-friends"></i> 90€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 140€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+
+
+            <!-- 
+              SETA DE NAVEGAÇÃO DIREITA 
+              - Botão para rolar para frente
+              - Usa ícone Font Awesome (chevron-right)
+              - Chama função scrollTours com direção 1 (direita)
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow right" onclick="scrollTours(1, 'tours-scroll-3')" aria-label="Avançar">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- 
+  =============================================
+  SEÇÃO HISTÓRICA - VIAGEM NO TEMPO 
+  =============================================
+  Exibe roteiros históricos em formato de cards roláveis
+  Diferencia-se por focar em aspectos históricos e culturais
+-->
+<div class="container" id="viagem-tempo">
+    <!-- Título principal da seção -->
+    <h1 class="section-title">Viagem no Tempo: História do Tarrafal</h1>
+    
+    <!-- Container principal dos cards históricos -->
+    <div class="tours-wrapper">
+        <!-- Container interno que organiza os elementos -->
+        <div class="tours-container">
+            <!-- 
+              SETA DE NAVEGAÇÃO ESQUERDA 
+              - Controle de rolagem para conteúdo histórico
+              - Ícone de seta esquerda (Font Awesome)
+              - Função scrollTours com parâmetro -1 (rolagem para trás)
+              - ID único 'tours-scroll-historia' como referência
+            -->
+            <button class="scroll-arrow left" onclick="scrollTours(-1, 'tours-scroll-historia')" aria-label="Voltar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- 
+              ÁREA ROLÁVEL DE CONTEÚDO HISTÓRICO
+              - ID específico para controle JavaScript
+              - Layout horizontal com overflow para rolagem
+              - Contém 4 cards temáticos
+            -->
+            <div class="tours-scroll" id="tours-scroll-historia">
+                
+                <!-- INÍCIO DO CARD - CAMPO DE CONCENTRAÇÃO -->
+<div class="tour-card" style="border-top: 3px solid #7f8c8d;">  <!-- Cinza para locais históricos -->
+    <h2 class="tour-title">
+        <i class="fas fa-landmark" style="color: #7f8c8d;"></i> Campo de Concentração
+    </h2>
+    
+    <div class="tour-highlights">
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 2 horas
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-walking"></i> Distância: 2km
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-history"></i> Visita guiada histórica
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-monument"></i> Patrimônio cultural
+        </div>
+        
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 40€</span>
+                <span><i class="fas fa-user-friends"></i> 60€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 140€</span>
+            </span>
+        </div>
+    </div>
+    
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - RABELADAS ESPINHO BRANCO -->
+<div class="tour-card" style="border-top: 3px solid #e67e22;">  <!-- Laranja para experiências culturais -->
+    <h2 class="tour-title">
+        <i class="fas fa-people-arrows" style="color: #e67e22;"></i> Rabeladas Espinho Branco
+    </h2>
+    
+    <div class="tour-highlights">
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 3 horas
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-car"></i> Distância: 25km
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço incluído
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-hands-helping"></i> Comunidade tradicional
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-camera"></i> Arte e cultura local
+        </div>
+        
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 90€</span>
+                <span><i class="fas fa-user-friends"></i> 120€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 200€</span>
+            </span>
+        </div>
+    </div>
+    
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - CIDADE VELHA E PLATEAU PRAIA -->
+<div class="tour-card" style="border-top: 3px solid #3498db;">  <!-- Azul para tours completos -->
+    <h2 class="tour-title">
+        <i class="fas fa-archway" style="color: #3498db;"></i> Cidade Velha e Plateau Praia
+    </h2>
+    
+    <div class="tour-highlights">
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 7 horas
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-bus"></i> Distância: 76km
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço incluído
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-university"></i> Patrimônio Mundial UNESCO
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-umbrella-beach"></i> Visita à praia histórica
+        </div>
+        
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 160€</span>
+                <span><i class="fas fa-user-friends"></i> 180€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 340€</span>
+            </span>
+        </div>
+    </div>
+    
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - CIDADE DO TARRAFAL E TOUR DE BARCO -->
+<div class="tour-card" style="border-top: 3px solid #9b59b6;">  <!-- Roxo para combos -->
+    <h2 class="tour-title">
+        <i class="fas fa-city" style="color: #9b59b6;"></i> Cidade do Tarrafal e Tour de Barco
+    </h2>
+    
+    <div class="tour-highlights">
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 7-8 horas
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-ship"></i> Passeio de barco incluso
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço incluído
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-umbrella-beach"></i> Experiência costeira
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-water"></i> Vida marinha
+        </div>
+        
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 110€</span>
+                <span><i class="fas fa-user-friends"></i> 140€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 240€</span>
+            </span>
+        </div>
+    </div>
+    
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+            </div>
+
+            <!-- 
+              SETA DE NAVEGAÇÃO DIREITA 
+              - Controle para rolagem progressiva
+              - Ícone de seta direita (Font Awesome)
+              - Função scrollTours com parâmetro 1 (avançar)
+              - Mesmo ID de referência 'tours-scroll-historia'
+            -->
+            <button class="scroll-arrow right" onclick="scrollTours(1, 'tours-scroll-historia')" aria-label="Avançar">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- 
+  =============================================
+  SEÇÃO AQUÁTICA - AVENTURAS MARÍTIMAS
+  =============================================
+  Apresenta diversas opções de atividades náuticas e marinhas
+  Diferencia-se pelo enfoque em experiências no mar e vida subaquática
+-->
+<div class="container" id="atividades-aquaticas">
+    <!-- Título principal da seção -->
+    <h1 class="section-title">Atividades Aquáticas</h1>
+    
+    <!-- Container principal dos cards aquáticos -->
+    <div class="tours-wrapper">
+        <!-- Container interno que organiza os elementos -->
+        <div class="tours-container">
+            <!-- 
+              SETA DE NAVEGAÇÃO ESQUERDA 
+              - Controle de rolagem para atividades aquáticas
+              - Ícone de seta esquerda (Font Awesome)
+              - Função scrollTours com direção -1 (esquerda)
+              - ID único 'tours-scroll-8' para referência
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow left" onclick="scrollTours(-1, 'tours-scroll-8')" aria-label="Voltar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- 
+              ÁREA ROLÁVEL DE ATIVIDADES AQUÁTICAS
+              - ID específico para controle JavaScript
+              - Layout horizontal com scroll suave
+              - Contém 9 cards de diferentes atividades marítimas
+            -->
+            <div class="tours-scroll" id="tours-scroll-8">
+                
+                <!-- INÍCIO DO CARD - FISH TRIP -->
+<div class="tour-card" style="border-top: 3px solid #3498db;">  <!-- Azul para atividades aquáticas -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-fish" style="color: #3498db;"></i> Fish Trip
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 3 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-anchor"></i> Distância: 8 milhas náuticas
+        </div>
+        
+        <!-- EQUIPAMENTO -->
+        <div class="highlight-item">
+            <i class="fas fa-fishing-rod"></i> Equipamento incluído
+        </div>
+        
+        <!-- GUIA -->
+        <div class="highlight-item">
+            <i class="fas fa-user-tie"></i> Guia especializado
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 70€</span>
+                <span><i class="fas fa-user-friends"></i> 90€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 160€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - TARRAFAL BEACH - LIGHT HOUSE -->
+<div class="tour-card" style="border-top: 3px solid #1abc9c;">  <!-- Verde-água para passeios costeiros -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-umbrella-beach" style="color: #1abc9c;"></i> Tarrafal Beach - Light House
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 1h30min
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 5 milhas
+        </div>
+        
+        <!-- DESTAQUE 1 -->
+        <div class="highlight-item">
+            <i class="fas fa-camera"></i> Ótimas oportunidades fotográficas
+        </div>
+        
+        <!-- DESTAQUE 2 -->
+        <div class="highlight-item">
+            <i class="fas fa-history"></i> Farol histórico
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 40€</span>
+                <span><i class="fas fa-user-friends"></i> 50€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 100€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - SNORKELLING -->
+<div class="tour-card" style="border-top: 3px solid #3498db;">  <!-- Azul para atividades aquáticas -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-water" style="color: #3498db;"></i> Snorkelling
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 1h30min
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-swimmer"></i> Distância: 5 milhas
+        </div>
+        
+        <!-- DESTAQUE 1 -->
+        <div class="highlight-item">
+            <i class="fas fa-fish"></i> Equipamento incluído
+        </div>
+        
+        <!-- DESTAQUE 2 -->
+        <div class="highlight-item">
+            <i class="fas fa-eye"></i> Vida marinha abundante
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 65€</span>
+                <span><i class="fas fa-user-friends"></i> 80€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 140€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - TARRAFAL BEACH - BLACK SAND BEACH -->
+<div class="tour-card" style="border-top: 3px solid #34495e;">  <!-- Cinza-escuro para praia de areia preta -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-umbrella-beach" style="color: #34495e;"></i> Tarrafal Beach - Black Sand Beach
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 2 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-route"></i> Distância: 8 milhas
+        </div>
+        
+        <!-- DESTAQUE 1 -->
+        <div class="highlight-item">
+            <i class="fas fa-volcano"></i> Areia vulcânica negra
+        </div>
+        
+        <!-- DESTAQUE 2 -->
+        <div class="highlight-item">
+            <i class="fas fa-water"></i> Águas cristalinas
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 60€</span>
+                <span><i class="fas fa-user-friends"></i> 70€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 120€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - TARRAFAL BEACH - FAZENDA BAY -->
+<div class="tour-card" style="border-top: 3px solid #1abc9c;">  <!-- Verde-água para baía -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-ship" style="color: #1abc9c;"></i> Tarrafal Beach - Fazenda Bay
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 1h30min
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-anchor"></i> Distância: 6 milhas
+        </div>
+        
+        <!-- DESTAQUE 1 -->
+        <div class="highlight-item">
+            <i class="fas fa-swimming-pool"></i> Baía protegida
+        </div>
+        
+        <!-- DESTAQUE 2 -->
+        <div class="highlight-item">
+            <i class="fas fa-fish"></i> Excelente para observação marinha
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 60€</span>
+                <span><i class="fas fa-user-friends"></i> 70€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 120€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - BOAT TOUR + FISHING + BARBECUE -->
+<div class="tour-card" style="border-top: 3px solid #2980b9;">  <!-- Azul marinho para atividades náuticas -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-ship" style="color: #2980b9;"></i> Boat Tour + Fishing + Barbecue
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 3-4 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-anchor"></i> Distância: 8 milhas
+        </div>
+        
+        <!-- DESTAQUE 1 -->
+        <div class="highlight-item">
+            <i class="fas fa-fish"></i> Equipamento de pesca incluído
+        </div>
+        
+        <!-- DESTAQUE 2 -->
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço (barbecue) incluído
+        </div>
+        
+        <!-- DESTAQUE 3 -->
+        <div class="highlight-item">
+            <i class="fas fa-life-ring"></i> Segurança garantida
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 90€</span>
+                <span><i class="fas fa-user-friends"></i> 120€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 220€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - RIBEIRA DA BARCA - ÁGUAS BELAS (CAVE) -->
+<div class="tour-card" style="border-top: 3px solid #16a085;">  <!-- Verde-água para grutas marinhas -->
+    <!-- TÍTULO DO PASSEIO -->
+    <h2 class="tour-title">
+        <i class="fas fa-water" style="color: #16a085;"></i> Ribeira da Barca - Águas Belas (Cave)
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 2 horas
+        </div>
+        
+        <!-- DISTÂNCIA -->
+        <div class="highlight-item">
+            <i class="fas fa-swimmer"></i> Distância: 7 milhas
+        </div>
+        
+        <!-- DESTAQUE 1 -->
+        <div class="highlight-item">
+            <i class="fas fa-mountain"></i> Gruta marinha impressionante
+        </div>
+        
+        <!-- DESTAQUE 2 -->
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço tradicional incluído
+        </div>
+        
+        <!-- DESTAQUE 3 -->
+        <div class="highlight-item">
+            <i class="fas fa-camera"></i> Paisagens únicas para fotos
+        </div>
+        
+        <!-- PREÇOS -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 110€</span>
+                <span><i class="fas fa-user-friends"></i> 140€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 260€</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                
+            </div>
+
+            <!-- 
+              SETA DE NAVEGAÇÃO DIREITA 
+              - Controle para rolagem progressiva
+              - Ícone de seta direita (Font Awesome)
+              - Função scrollTours com direção 1 (direita)
+              - Mesmo ID de referência 'tours-scroll-8'
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow right" onclick="scrollTours(1, 'tours-scroll-8')" aria-label="Avançar">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- 
+  =============================================
+  SEÇÃO DE ACTIVIDADES COM CARRO
+  =============================================
+  Apresenta tours e passeios que envolvem veículos
+  Diferencia-se pelo foco em deslocação automóvel
+-->
+<div class="container" id="actividade-carro">
+    <!-- Título principal da seção -->
+    <h1 class="section-title">Actividade com Carro</h1>
+    
+    <!-- Container principal dos cards -->
+    <div class="tours-wrapper">
+        <!-- Container interno que organiza os elementos -->
+        <div class="tours-container">
+            <!-- 
+              SETA DE NAVEGAÇÃO ESQUERDA 
+              - Controle de rolagem para experiências
+              - Ícone de seta esquerda (Font Awesome)
+              - Função scrollTours com direção -1 (esquerda)
+              - ID único 'tours-scroll-carro' para referência
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow left" onclick="scrollTours(-1, 'tours-scroll-carro')" aria-label="Voltar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- 
+              ÁREA ROLÁVEL DE ACTIVIDADES COM CARRO
+              - ID específico para controle JavaScript
+              - Layout horizontal com scroll suave
+              - Contém 3 cards de atividades
+            -->
+            <div class="tours-scroll" id="tours-scroll-carro">
+                
+                <!-- INÍCIO DO CARD - MERCADO DE ASSOMADA E ÁRVORE DE POILÃO -->
+<div class="tour-card" style="border-top: 3px solid #27ae60;">  <!-- Verde para experiências culturais -->
+    <h2 class="tour-title">
+        <i class="fas fa-shopping-basket" style="color: #27ae60;"></i> Mercado de Assomada e Árvore de Poilão
+    </h2>
+    
+    <div class="tour-highlights">
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 5 horas
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-car"></i> Distância: 30km
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço incluído
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-tree"></i> Árvore centenária
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-people-carry"></i> Mercado tradicional
+        </div>
+        
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 100€</span>
+                <span><i class="fas fa-user-friends"></i> 130€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 220€</span>
+            </span>
+        </div>
+    </div>
+    
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+
+                <!-- INÍCIO DO CARD - TOUR NORTE DA ILHA -->
+<div class="tour-card" style="border-top: 3px solid #3498db;">  <!-- Azul para tours regionais -->
+    <h2 class="tour-title">
+        <i class="fas fa-compass" style="color: #3498db;"></i> Tour Norte da Ilha
+    </h2>
+    
+    <div class="tour-highlights">
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 6 horas
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-bus"></i> Distância: 45km
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço incluído
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-mountain"></i> Paisagens do norte
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-map-marked-alt"></i> Rota panorâmica
+        </div>
+        
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 130€</span>
+                <span><i class="fas fa-user-friends"></i> 160€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 260€</span>
+            </span>
+        </div>
+    </div>
+    
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - TOUR ILHA COMPLETA -->
+<div class="tour-card" style="border-top: 3px solid #e74c3c;">  <!-- Vermelho para tours premium -->
+    <h2 class="tour-title">
+        <i class="fas fa-globe-africa" style="color: #e74c3c;"></i> Tour Ilha Completa
+    </h2>
+    
+    <div class="tour-highlights">
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 9 horas
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-road"></i> Distância: 76km
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-utensils"></i> Almoço incluído
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-star"></i> Experiência completa
+        </div>
+        
+        <div class="highlight-item">
+            <i class="fas fa-camera"></i> Principais pontos turísticos
+        </div>
+        
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preços:
+            <span style="margin-left: 8px; display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <span><i class="fas fa-user"></i> 160€</span>
+                <span><i class="fas fa-user-friends"></i> 190€</span>
+                <span><i class="fas fa-users fa-lg" style="color: #e74c3c;"></i> 340€</span>
+            </span>
+        </div>
+    </div>
+    
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+            </div>
+
+            <!-- 
+              SETA DE NAVEGAÇÃO DIREITA 
+              - Controle para rolagem progressiva
+              - Ícone de seta direita (Font Awesome)
+              - Função scrollTours com direção 1 (direita)
+              - Mesmo ID de referência 'tours-scroll-carro'
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow right" onclick="scrollTours(1, 'tours-scroll-carro')" aria-label="Avançar">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 
+  =============================================
+  SEÇÃO DE MASSOTERAPIA E RELAXAMENTO
+  =============================================
+  Estrutura idêntica às outras seções de serviços
+  Contém 5 cards de terapias com rolagem horizontal
+-->
+<div class="container" id="massoterapia-relaxamento">
+    <!-- Título principal da seção -->
+    <h1 class="section-title">Massagem</h1>
+    
+    <!-- Container principal que envolve toda a área rolável -->
+    <div class="tours-wrapper">
+        <div class="tours-container">
+            <!-- Seta de navegação esquerda -->
+            <button class="scroll-arrow left" onclick="scrollTours(-1, 'tours-scroll-massagem')" aria-label="Voltar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- Área rolável com os cards de serviços -->
+            <div class="tours-scroll" id="tours-scroll-massagem">
+                
+                <!-- INÍCIO DO CARD - MASSAGEM CORPO INTEIRO -->
+<div class="tour-card" style="border-top: 3px solid #9b59b6;">  <!-- Roxo para terapias -->
+    <!-- TÍTULO DO SERVIÇO -->
+    <h2 class="tour-title">
+        <i class="fas fa-spa" style="color: #9b59b6;"></i> Massagem Corpo Inteiro
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 1 Hora
+        </div>
+        
+        <!-- TÉCNICA -->
+        <div class="highlight-item">
+            <i class="fas fa-hands"></i> Técnica: Relaxamento Profundo
+        </div>
+        
+        <!-- BENEFÍCIOS -->
+        <div class="highlight-item">
+            <i class="fas fa-heart"></i> Benefícios: Alívio de tensão e estresse
+        </div>
+        
+        <!-- LOCAL -->
+        <div class="highlight-item">
+            <i class="fas fa-map-marker-alt"></i> Local: Spa ou domicílio (sob consulta)
+        </div>
+        
+        <!-- MATERIAL -->
+        <div class="highlight-item">
+            <i class="fas fa-oil-can"></i> Inclui: Óleos essenciais premium
+        </div>
+        
+        <!-- PREÇO -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preço:
+            <span style="margin-left: 8px; font-weight: bold; color: #9b59b6;">
+                5.000$00
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button">
+            <i class="fas fa-comment-alt"></i> Reservar Agora
+        </button>
+    </div>
+</div>
+
+<!-- INÍCIO DO CARD - MASSAGEM PARA CASAIS -->
+<div class="tour-card" style="border-top: 3px solid #e84393; background: linear-gradient(to bottom, #fff, #fff5f7); box-shadow: 0 6px 12px rgba(232, 67, 147, 0.15);">
+    
+    <!-- TÍTULO ROMÂNTICO -->
+    <h2 class="tour-title" style="color: #e84393;">
+        <i class="fas fa-heart" style="color: #e84393;"></i> Massagem para Casais 
+        <span style="font-size: 0.7em; background: #fd79a8; color: white; padding: 2px 10px; border-radius: 15px; margin-left: 5px;">EXPERIÊNCIA ROMÂNTICA</span>
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- TEMPO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> <strong>90 minutos</strong> de relaxamento compartilhado
+        </div>
+        
+        <!-- AMBIENTE -->
+        <div class="highlight-item">
+            <i class="fas fa-moon"></i> Ambiente privativo com iluminação romântica
+        </div>
+        
+        <!-- BEBIDA -->
+        <div class="highlight-item">
+            <i class="fas fa-wine-glass-alt"></i> Cortesia: 2 taças de espumante (+ suco para não-alcóolicos)
+        </div>
+        
+        <!-- DIFERENCIAIS -->
+        <div class="highlight-item">
+            <i class="fas fa-music"></i> Trilha sonora relaxante personalizada
+        </div>
+        
+        <!-- PRESENTE -->
+        <div class="highlight-item" style="color: #e84393;">
+            <i class="fas fa-gift"></i> Kit presentão: Óleos essenciais para levar para casa
+        </div>
+        
+        <!-- PREÇO COM JUSTIFICATIVA -->
+        <div class="highlight-item" style="align-items: center; margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between; width: 100%;">
+                <span>
+                    <i class="fas fa-tags"></i> <strong>Investimento:</strong>
+                </span>
+                <span style="font-weight: bold; color: #e84393; font-size: 1.2em;">
+                    10.000$00
+                </span>
+            </div>
+            <div style="font-size: 0.7em; color: #636e72; text-align: right; width: 100%;">
+                (Valor por casal - economiza 15% vs. sessões separadas)
+            </div>
+        </div>
+    </div>
+    
+    <!-- BOTÃO ESPECIAL -->
+    <div class="buttons-container" style="margin-top: 15px;">
+        <button class="book-button" style="background: linear-gradient(to right, #e84393, #fd79a8); font-weight: bold; letter-spacing: 0.5px;">
+            <i class="fas fa-heartbeat"></i> Presenteie seu Amor
+        </button>
+    </div>
+    
+    <!-- OBSERVAÇÃO ROMÂNTICA -->
+    <div style="font-size: 0.7em; text-align: center; margin-top: 8px; color: #e84393; font-style: italic;">
+        "Um momento para reconectar corpos e almas"
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - MASSAGEM NAS COSTAS -->
+<div class="tour-card" style="border-top: 3px solid #8e44ad;">  <!-- Roxo mais escuro para terapias específicas -->
+    <!-- TÍTULO DO SERVIÇO -->
+    <h2 class="tour-title">
+        <i class="fas fa-hands-helping" style="color: #8e44ad;"></i> Massagem nas Costas
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 30 minutos
+        </div>
+        
+        <!-- FOCO TERAPÊUTICO -->
+        <div class="highlight-item">
+            <i class="fas fa-bone"></i> Foco: Alívio de dores cervicais e lombares
+        </div>
+        
+        <!-- TÉCNICA -->
+        <div class="highlight-item">
+            <i class="fas fa-spa"></i> Técnica: Terapêutica com pressão controlada
+        </div>
+        
+        <!-- BENEFÍCIOS -->
+        <div class="highlight-item">
+            <i class="fas fa-heartbeat"></i> Benefícios: Melhora postura e circulação
+        </div>
+        
+        <!-- MATERIAL -->
+        <div class="highlight-item">
+            <i class="fas fa-leaf"></i> Óleos: Arnica ou Hortelã-pimenta (à escolha)
+        </div>
+        
+        <!-- PREÇO COM DESTAQUE -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preço:
+            <span style="margin-left: 8px; font-weight: bold; color: #8e44ad;">
+                3.500$00 
+                <span style="font-size: 0.8em; color: #27ae60;">(10% desconto em pacotes)</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA -->
+    <div class="buttons-container">
+        <button class="book-button" style="background-color: #8e44ad;">
+            <i class="fas fa-calendar-check"></i> Agendar Agora
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+
+                <!-- INÍCIO DO CARD - MASSAGEM COM 4 MÃOS -->
+<div class="tour-card" style="border-top: 3px solid #e67e22; border: 2px solid #f39c12;">  <!-- Dourado/Laranja para serviços premium -->
+    <!-- TÍTULO COM DESTAQUE -->
+    <h2 class="tour-title" style="color: #e67e22;">
+        <i class="fas fa-hands" style="color: #e67e22;"></i> Massagem com 4 Mãos <span style="font-size: 0.8em; background: #f39c12; color: white; padding: 2px 8px; border-radius: 12px; margin-left: 5px;">EXPERIÊNCIA PREMIUM</span>
+    </h2>
+    
+    <!-- LISTA DE DESTAQUES -->
+    <div class="tour-highlights">
+        <!-- DURAÇÃO -->
+        <div class="highlight-item">
+            <i class="far fa-clock"></i> Duração: 30 minutos (equivalente a 60min convencional)
+        </div>
+        
+        <!-- DIFERENCIAL -->
+        <div class="highlight-item">
+            <i class="fas fa-star"></i> Dois terapeutas sincronizados
+        </div>
+        
+        <!-- BENEFÍCIOS -->
+        <div class="highlight-item">
+            <i class="fas fa-brain"></i> Efeito: Relaxamento profundo 2x mais rápido
+        </div>
+        
+        <!-- INDICAÇÃO -->
+        <div class="highlight-item">
+            <i class="fas fa-user-tag"></i> Ideal para: Alívio intensivo de tensão
+        </div>
+        
+        <!-- OFERTA ESPECIAL -->
+        <div class="highlight-item" style="color: #e74c3c; font-weight: bold;">
+            <i class="fas fa-gift"></i> Cortesia: Chá relaxante pós-massagem
+        </div>
+        
+        <!-- PREÇO COM VALORIZAÇÃO -->
+        <div class="highlight-item" style="align-items: center;">
+            <i class="fas fa-tags"></i> Preço:
+            <span style="margin-left: 8px; font-weight: bold; color: #e67e22; font-size: 1.1em;">
+                8.000$00 
+                <span style="font-size: 0.7em; color: #2ecc71;">(Economize 1.500$00 vs. 2 sessões individuais)</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- BOTÃO DE RESERVA PREMIUM -->
+    <div class="buttons-container">
+        <button class="book-button" style="background: linear-gradient(135deg, #e67e22, #f39c12); box-shadow: 0 4px 8px rgba(230, 126, 34, 0.3);">
+            <i class="fas fa-gem"></i> Reservar Experiência Exclusiva
+        </button>
+    </div>
+</div>
+<!-- FIM DO CARD -->
+            </div>
+
+            <!-- Seta de navegação direita -->
+            <button class="scroll-arrow right" onclick="scrollTours(1, 'tours-scroll-massagem')" aria-label="Avançar">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- 
+  =============================================
+  SEÇÃO COMUNITÁRIA - VIDA LOCAL 
+  =============================================
+  Apresenta experiências de imersão na cultura e vida comunitária
+  Diferencia-se pelo foco em interação humana e atividades participativas
+-->
+<div class="container" id="vida-local">
+    <!-- Título principal da seção -->
+    <h1 class="section-title">Vida Local e Comunidade</h1>
+    
+    <!-- Container principal dos cards comunitários -->
+    <div class="tours-wrapper">
+        <!-- Container interno que organiza os elementos -->
+        <div class="tours-container">
+            <!-- 
+              SETA DE NAVEGAÇÃO ESQUERDA 
+              - Controle de rolagem para experiências comunitárias
+              - Ícone de seta esquerda (Font Awesome)
+              - Função scrollTours com parâmetro -1 (rolagem para trás)
+              - ID único 'tours-scroll-5' como referência
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow left" onclick="scrollTours(-1, 'tours-scroll-5')" aria-label="Voltar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- 
+              ÁREA ROLÁVEL DE EXPERIÊNCIAS COMUNITÁRIAS
+              - ID específico para controle JavaScript
+              - Layout horizontal com overflow para rolagem
+              - Contém 3 cards de vivências locais
+            -->
+            <div class="tours-scroll" id="tours-scroll-5">
+                
+                <!-- 
+                  ==================================
+                  CARD 1: VIVÊNCIA AGRÍCOLA 
+                  ==================================
+                  Foco: Turismo rural e atividades agrícolas
+                -->
+                <div class="tour-card">
+                    <!-- Título da experiência -->
+                    <h2 class="tour-title">Vivência Agrícola (Turismo Rural)</h2>
+                    
+                    <!-- Destaques da experiência -->
+                    <div class="tour-highlights">
+                        <!-- 
+                          Itens informativos com ícones temáticos:
+                          - Hiking para nível de dificuldade
+                          - Relógio para duração
+                          - Planta para atividades agrícolas
+                          - Mapa para localização
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Moderada
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 3–4 horas
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-seedling"></i> Plantio, colheita, preparação de refeições
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Zona rural de Santiago
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de ação -->
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  ==================================
+                  CARD 2: VOLUNTURISMO 
+                  ==================================
+                  Foco: Turismo socialmente responsável
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Volunturismo & Projetos Sociais</h2>
+                    <div class="tour-highlights">
+                        <!-- 
+                          Ícones representativos:
+                          - Hiking para dificuldade
+                          - Relógio para duração flexível
+                          - Mãos ajudando para trabalho voluntário
+                          - Mapa para múltiplos locais
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Fácil
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 1 dia (personalizável)
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-hands-helping"></i> Atividades com ONGs, escolas e comunidades
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Vários locais na ilha
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  ==================================
+                  CARD 3: ARTESANATO LOCAL 
+                  ==================================
+                  Foco: Preservação cultural e artes tradicionais
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Artesanato com Comunidades Locais</h2>
+                    <div class="tour-highlights">
+                        <!-- 
+                          Ícones temáticos:
+                          - Hiking para dificuldade
+                          - Relógio para duração
+                          - Paleta para atividades artesanais
+                          - Mapa para localização
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Fácil
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 2 horas
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-palette"></i> Trabalhos em tecido, palha, cerâmica
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Assomada ou interior
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+              SETA DE NAVEGAÇÃO DIREITA 
+              - Controle para rolagem progressiva
+              - Ícone de seta direita (Font Awesome)
+              - Função scrollTours com parâmetro 1 (avançar)
+              - Mesmo ID de referência 'tours-scroll-5'
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow right" onclick="scrollTours(1, 'tours-scroll-5')" aria-label="Avançar">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- 
+  =============================================
+  SEÇÃO GASTRONÔMICA - SABORES DE CABO VERDE
+  =============================================
+  Apresenta experiências culinárias e degustações típicas
+  Diferencia-se pelo foco na cultura alimentar e tradições locais
+-->
+<div class="container" id="gastronomia-sabores">
+    <!-- Título principal da seção gastronômica -->
+    <h1 class="section-title">Gastronomia & Sabores</h1>
+    
+    <!-- Container principal dos cards gastronômicos -->
+    <div class="tours-wrapper">
+        <!-- Container interno que organiza os elementos -->
+        <div class="tours-container">
+            <!-- 
+              SETA DE NAVEGAÇÃO ESQUERDA 
+              - Controle de rolagem para experiências gastronômicas
+              - Ícone de seta esquerda (Font Awesome)
+              - Função scrollTours com parâmetro -1 (rolagem para trás)
+              - ID único 'tours-scroll-6' para controle JavaScript
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow left" onclick="scrollTours(-1, 'tours-scroll-6')" aria-label="Voltar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- 
+              ÁREA ROLÁVEL DE EXPERIÊNCIAS GASTRONÔMICAS
+              - ID específico para controle JavaScript
+              - Layout horizontal com overflow para rolagem
+              - Contém 4 cards de vivências culinárias
+            -->
+            <div class="tours-scroll" id="tours-scroll-6">
+                
+                <!-- 
+                  ==================================
+                  CARD 1: TOUR GASTRONÔMICO 
+                  ==================================
+                  Foco: Explorar mercados e sabores locais
+                -->
+                <div class="tour-card">
+                    <!-- Título da experiência gastronômica -->
+                    <h2 class="tour-title">Tour Gastronômico em Mercados Locais</h2>
+                    
+                    <!-- Destaques da experiência -->
+                    <div class="tour-highlights">
+                        <!-- 
+                          Itens informativos com ícones temáticos:
+                          - Caminhada para nível de dificuldade
+                          - Relógio para duração
+                          - Talheres para degustação
+                          - Mapa para pontos de partida
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Fácil
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 2 horas
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-utensils"></i> Degustação de frutas, doces, refeições típicas
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Assomada ou Praia
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de ação -->
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  ==================================
+                  CARD 2: DEGUSTAÇÃO DE BEBIDAS 
+                  ==================================
+                  Foco: Tradições alcoólicas locais
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Degustação de Grogue e Ponche</h2>
+                    <div class="tour-highlights">
+                        <!-- 
+                          Ícones representativos:
+                          - Caminhada para dificuldade
+                          - Relógio para duração
+                          - Taça para experiência de degustação
+                          - Mapa para localização das destilarias
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Fácil
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 1h30
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-wine-glass-alt"></i> Visita a destilaria + prova de bebidas
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Santa Catarina ou Ribeira Grande
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  ==================================
+                  CARD 3: ALMOÇO TÍPICO 
+                  ==================================
+                  Foco: Imersão em ambiente familiar
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Almoço Típico com Família Local</h2>
+                    <div class="tour-highlights">
+                        <!-- 
+                          Ícones temáticos:
+                          - Caminhada para dificuldade
+                          - Relógio para duração
+                          - Usuários para interação social
+                          - Mapa para localização
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Fácil
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 2–3 horas
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-users"></i> Cultura, gastronomia e convivência
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Interior da ilha
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  ==================================
+                  CARD 4: NOITE CULTURAL 
+                  ==================================
+                  Foco: Experiência culinária com entretenimento
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Noite Cultural Cabo-Verdiana</h2>
+                    <div class="tour-highlights">
+                        <!-- 
+                          Ícones representativos:
+                          - Caminhada para dificuldade
+                          - Relógio para duração
+                          - Música para componente cultural
+                          - Mapa para localização
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Fácil
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 3 horas
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-music"></i> Jantar tradicional com música e dança ao vivo
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Praia
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+              SETA DE NAVEGAÇÃO DIREITA 
+              - Controle para rolagem progressiva
+              - Ícone de seta direita (Font Awesome)
+              - Função scrollTours com parâmetro 1 (avançar)
+              - Mesmo ID de referência 'tours-scroll-6'
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow right" onclick="scrollTours(1, 'tours-scroll-6')" aria-label="Avançar">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 
+  =============================================
+  SEÇÃO CULTURAL - EXPERIÊNCIAS AUTÊNTICAS
+  =============================================
+  Apresenta vivências imersivas na cultura cabo-verdiana
+  Diferencia-se pelo enfoque em atividades participativas e artísticas
+-->
+<div class="container" id="experiencias-culturais">
+    <!-- Título principal da seção -->
+    <h1 class="section-title">Experiências Culturais</h1>
+    
+    <!-- Container principal dos cards culturais -->
+    <div class="tours-wrapper">
+        <!-- Container interno que organiza os elementos -->
+        <div class="tours-container">
+            <!-- 
+              SETA DE NAVEGAÇÃO ESQUERDA 
+              - Controle de rolagem para experiências culturais
+              - Ícone de seta esquerda (Font Awesome)
+              - Função scrollTours com direção -1 (esquerda)
+              - ID único 'tours-scroll-7' para referência
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow left" onclick="scrollTours(-1, 'tours-scroll-7')" aria-label="Voltar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- 
+              ÁREA ROLÁVEL DE EXPERIÊNCIAS CULTURAIS
+              - ID específico para controle JavaScript
+              - Layout horizontal com scroll suave
+              - Contém 4 cards de atividades culturais
+            -->
+            <div class="tours-scroll" id="tours-scroll-7">
+                
+                <!-- 
+                  ==================================
+                  CARD 1: OFICINA MUSICAL
+                  ==================================
+                  Foco: Tradições musicais cabo-verdianas
+                -->
+                <div class="tour-card">
+                    <!-- Título da experiência cultural -->
+                    <h2 class="tour-title">Oficina de Batuque e Funaná</h2>
+                    
+                    <!-- Destaques da experiência -->
+                    <div class="tour-highlights">
+                        <!-- 
+                          Itens informativos com ícones temáticos:
+                          - Caminhada para nível de dificuldade
+                          - Relógio para duração
+                          - Música para atividade principal
+                          - Mapa para localização
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Fácil
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 1h30
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-music"></i> Música tradicional e interação com artistas locais
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Praia / Assomada
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de ação -->
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  ==================================
+                  CARD 2: WORKSHOP CULINÁRIO
+                  ==================================
+                  Foco: Gastronomia como expressão cultural
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Workshop de Culinária Tradicional</h2>
+                    <div class="tour-highlights">
+                        <!-- 
+                          Ícones representativos:
+                          - Caminhada para dificuldade
+                          - Relógio para duração
+                          - Talheres para atividade culinária
+                          - Mapa para localização
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Fácil
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 2–3 horas
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-utensils"></i> Preparação de cachupa, grogue e doces típicos
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Praia ou interior
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  ==================================
+                  CARD 3: ARTE URBANA
+                  ==================================
+                  Foco: Expressões artísticas contemporâneas
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Roteiro de Arte Urbana</h2>
+                    <div class="tour-highlights">
+                        <!-- 
+                          Ícones temáticos:
+                          - Caminhada para dificuldade
+                          - Relógio para duração
+                          - Pincel para arte urbana
+                          - Mapa para localização
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Fácil
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 1–2 horas
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-paint-brush"></i> Grafites, murais e cultura de rua
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Bairro da Várzea ou Achada Santo António
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  ==================================
+                  CARD 4: IMERSÃO COMUNITÁRIA
+                  ==================================
+                  Foco: Vida cotidiana e tradições locais
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Vivência Comunitária em Aldeia Local</h2>
+                    <div class="tour-highlights">
+                        <!-- 
+                          Ícones representativos:
+                          - Caminhada para dificuldade
+                          - Relógio para duração
+                          - Usuários para interação social
+                          - Mapa para localização
+                        -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hiking"></i> Dificuldade: Fácil
+                        </div>
+                        <div class="highlight-item">
+                            <i class="far fa-clock"></i> Duração: 3–5 horas
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-users"></i> Interação com famílias, agricultura, artesanato
+                        </div>
+                        <div class="highlight-item">
+                            <i class="fas fa-map-marker-alt"></i> Partida: Interior da ilha
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="info-button">Ver Fotos</button>
+                        <button class="book-button">
+                               <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+              SETA DE NAVEGAÇÃO DIREITA 
+              - Controle para rolagem progressiva
+              - Ícone de seta direita (Font Awesome)
+              - Função scrollTours com direção 1 (direita)
+              - Mesmo ID de referência 'tours-scroll-7'
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow right" onclick="scrollTours(1, 'tours-scroll-7')" aria-label="Avançar">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- 
+  =============================================
+  SEÇÃO DE BELEZA E ESTÉTICA
+  =============================================
+  Esta seção segue exatamente a mesma estrutura das outras categorias de serviços
+  Contém 5 cards de serviços com rolagem horizontal
+-->
+<div class="container" id="beleza-estetica">
+    <!-- Título principal da seção -->
+    <h1 class="section-title">Beleza e Estética</h1>
+    
+    <!-- Container principal que envolve toda a área rolável -->
+    <div class="tours-wrapper">
+        <!-- Container interno com as setas de navegação e conteúdo -->
+        <div class="tours-container">
+            <!-- 
+              SETA DE NAVEGAÇÃO ESQUERDA 
+              - Chama a função scrollTours com direção -1 (esquerda)
+              - Usa o ID 'tours-scroll-beleza' como referência
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow left" onclick="scrollTours(-1, 'tours-scroll-beleza')" aria-label="Voltar">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- 
+              ÁREA ROLÁVEL DE SERVIÇOS 
+              - ID único 'tours-scroll-beleza' para controle do JavaScript
+              - Contém 5 cards de serviços diferentes
+            -->
+            <div class="tours-scroll" id="tours-scroll-beleza">
+                
+                <!-- 
+                  CARD 1: CUIDADOS FACIAIS 
+                  ==========================
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Cuidados Faciais</h2>
+                    <div class="tour-highlights">
+                        <!-- Item com ícone de spa para limpeza de pele -->
+                        <div class="highlight-item">
+                            <i class="fas fa-spa"></i> Limpeza de pele profunda
+                        </div>
+                        <!-- Item com ícone de varinha mágica para hidratação -->
+                        <div class="highlight-item">
+                            <i class="fas fa-magic"></i> Hidratação facial
+                        </div>
+                        <!-- Item com ícone de folha para peeling -->
+                        <div class="highlight-item">
+                            <i class="fas fa-leaf"></i> Peeling químico
+                        </div>
+                        <!-- Item com ícone de relógio para anti-idade -->
+                        <div class="highlight-item">
+                            <i class="fas fa-clock"></i> Tratamento anti-idade
+                        </div>
+                    </div>
+                    <!-- Container do botão de reserva -->
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <!-- 
+                          BOTÃO DE RESERVA 
+                          - Usa a mesma classe 'book-button' das outras seções
+                          - Já está integrado ao modal de reserva existente
+                        -->
+                        <button class="book-button">
+                            <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  CARD 2: DESIGN DE SOBRANCELHAS 
+                  ================================
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Design de Sobrancelhas</h2>
+                    <div class="tour-highlights">
+                        <!-- Item com ícone de olho para henna -->
+                        <div class="highlight-item">
+                            <i class="fas fa-eye"></i> Com henna natural
+                        </div>
+                        <!-- Item com ícone de tesoura para pinça -->
+                        <div class="highlight-item">
+                            <i class="fas fa-cut"></i> Técnica com pinça
+                        </div>
+                        <!-- Item com ícone de linha para depilação -->
+                        <div class="highlight-item">
+                            <i class="fas fa-thread"></i> Depilação com linha
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="book-button">
+                            <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  CARD 3: DEPILAÇÃO 
+                  ===================
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Depilação Profissional</h2>
+                    <div class="tour-highlights">
+                        <!-- Item com ícone de fogo para cera quente/fria -->
+                        <div class="highlight-item">
+                            <i class="fas fa-fire"></i> Cera quente/fria
+                        </div>
+                        <!-- Item com ícone de linha para técnica com linha -->
+                        <div class="highlight-item">
+                            <i class="fas fa-thread"></i> Técnica com linha
+                        </div>
+                        <!-- Item com ícone de lâmpada para laser -->
+                        <div class="highlight-item">
+                            <i class="fas fa-lightbulb"></i> Depilação a laser
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="book-button">
+                            <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  CARD 4: MANICURE E PEDICURE 
+                  ===========================
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Manicure & Pedicure</h2>
+                    <div class="tour-highlights">
+                        <!-- Item com ícone de mão para esmaltação -->
+                        <div class="highlight-item">
+                            <i class="fas fa-hand-sparkles"></i> Esmaltação em gel
+                        </div>
+                        <!-- Item com ícone de régua para alongamento -->
+                        <div class="highlight-item">
+                            <i class="fas fa-ruler-vertical"></i> Alongamento de unhas
+                        </div>
+                        <!-- Item com ícone médico para podologia -->
+                        <div class="highlight-item">
+                            <i class="fas fa-user-md"></i> Podologia estética
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="book-button">
+                            <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 
+                  CARD 5: MAQUIAGEM PROFISSIONAL 
+                  ==============================
+                -->
+                <div class="tour-card">
+                    <h2 class="tour-title">Maquiagem Profissional</h2>
+                    <div class="tour-highlights">
+                        <!-- Item com ícone de gravata para maquiagem social -->
+                        <div class="highlight-item">
+                            <i class="fas fa-user-tie"></i> Maquiagem social
+                        </div>
+                        <!-- Item com ícone de pincel para maquiagem artística -->
+                        <div class="highlight-item">
+                            <i class="fas fa-paint-brush"></i> Maquiagem artística
+                        </div>
+                        <!-- Item com ícone de calendário para eventos -->
+                        <div class="highlight-item">
+                            <i class="fas fa-calendar-check"></i> Para eventos especiais
+                        </div>
+                    </div>
+                    <div class="buttons-container" style="display: flex; flex-direction: column; gap: 6px;">
+                        <button class="book-button">
+                            <i class="fas fa-comment-alt"></i> Reservar Agora
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+              SETA DE NAVEGAÇÃO DIREITA 
+              - Chama a função scrollTours com direção 1 (direita)
+              - Usa o mesmo ID 'tours-scroll-beleza' como referência
+              - aria-label para acessibilidade
+            -->
+            <button class="scroll-arrow right" onclick="scrollTours(1, 'tours-scroll-beleza')" aria-label="Avançar">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- 
+  =============================================
+  RODAPÉ - INFORMAÇÕES DE CONTATO E LINKS
+  =============================================
+  Seção final da página com dados de contato e links sociais
+  Possui efeito especial quando acessado via âncora (#footer)
+-->
+<footer id="footer">
+    <!-- Container principal do rodapé -->
+    <div class="container">
+        <!-- Título da seção de contato -->
+        <h2>Contato</h2>
+        
+        <!-- Item de e-mail -->
+        <p>
+            <!-- Ícone de envelope -->
+            <i class="fas fa-envelope"></i>
+            <!-- Link de e-mail (mailto:) -->
+            <a href="mailto:leonardonardysc@gmail.com">leonardonardysc@gmail.com</a>
+        </p>
+        
+        <!-- Item de telefone -->
+        <p>
+            <!-- Ícone de telefone -->
+            <i class="fas fa-phone-alt"></i> (+238) 9 17 71 61
+            <!-- Link para WhatsApp (abre em nova aba) -->
+            <a href="https://wa.me/+2389177161" target="_blank">
+                <!-- Ícone do WhatsApp com cor diferenciada -->
+                <i class="fab fa-whatsapp"></i> (+238) 9 34 09 75
+            </a>
+        </p>
+        
+        <!-- Item de endereço físico -->
+        <p>
+            <!-- Ícone de localização -->
+            <i class="fas fa-map-marker-alt"></i> Endereço: Vila, Tarrafal, Ilha de Santiago, Cabo Verde
+        </p>
+
+        <!-- 
+          LINKS RÁPIDOS 
+          - Navegação interna principal
+          - Link para o modal do blog (aciona via JavaScript)
+        -->
+        <div class="links">
+            <a href="#">Home</a>
+            <a href="#trilhas-tarrafal">Trilhas</a>
+            <a href="#viagem-tempo">História</a>
+            <a href="#vida-local">Comunidade</a>
+            <a href="#gastronomia-sabores">Gastronomia</a>
+            <a href="#experiencias-culturais">Cultura</a>
+            <a href="#atividades-aquaticas">Aquáticas</a>
+            <a href="#" class="menu-btn" id="openBlogModal">Sobre Nós</a>
+        </div>
+
+        <!-- 
+          REDES SOCIAIS
+          - Ícones com links para redes sociais
+          - Atributo title para acessibilidade
+          - Efeito hover definido no CSS
+        -->
+        <div class="social-icons">
+            <!-- Link para Facebook -->
+            <a href="#" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <!-- Link para Instagram -->
+            <a href="#" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <!-- Link para Twitter -->
+            <a href="#" title="Twitter">
+                <i class="fab fa-twitter"></i>
+            </a>
+        </div>
+
+        <!-- 
+          DIREITOS AUTORAIS
+          - Informação de copyright
+          - Texto pequeno conforme definido no CSS
+        -->
+        <div class="rights">
+            <p>© 2025 Leonardo Nardy | Todos os direitos reservados</p>
+        </div>
+    </div>
+</footer>
+
+
+<!-- 
+  =============================================
+  MODAL DO BLOG - SOBRE O AUTOR
+  =============================================
+  Janela modal que aparece sobre o conteúdo da página
+  Exibe informações pessoais e profissionais do guia turístico
+  Fica oculto (display: none) até ser ativado via JavaScript
+-->
+<div id="blogModalBox" class="modal">
+  <!-- 
+    CONTEÚDO DO MODAL
+    - Container principal do conteúdo modal
+    - Estilizado com sombra e bordas arredondadas
+    - Posicionado centralmente na tela
+  -->
+  <div class="modal-content">
+    <!-- 
+      BOTÃO DE FECHAR
+      - Ícone '×' (times) para fechar o modal
+      - Posicionado no canto superior direito
+      - Estilizado para parecer um botão
+      - Evento de clique controlado por JavaScript
+    -->
+    <span class="close">&times;</span>
+    
+    <!-- Título do modal -->
+    <h2>Paixão pelo Turismo</h2>
+    
+    <!-- 
+      CONTEÚDO TEXTUAL
+      - Parágrafos com informações profissionais
+      - Texto pessoal e convidativo
+      - Espaçamento controlado pelo CSS
+    -->
+    <p>
+      Olá, sou Leonardo Nardy, do Tarrafal, com mais de 6 anos de experiência em turismo. 
+      Trabalhei como recepcionista, agente de reservas e chefe de recepção, aprendendo 
+      a criar experiências inesquecíveis para os viajantes.
+    </p>
+    
+    <p>
+      Essa jornada inspirou-me a abrir a minha agência, onde ofereço um atendimento 
+      personalizado e profissional. Cada roteiro é planeado com cuidado, garantindo 
+      que sua viagem seja perfeita.
+    </p>
+    
+    <p>
+      Quer aventura, relaxamento ou cultura? Estou aqui para transformar seus sonhos 
+      em realidade.
+    </p>
+    
+    <!-- 
+      CHAMADA PARA AÇÃO (CTA)
+      - Texto motivacional com emoji
+      - Quebra de linha para separar do contato
+      - Espaço reservado para informações de contato
+    -->
+    <p>
+      ✈️ Vamos começar? Contacte-me!<br>
+      [Seus contactos/redes sociais]
+    </p>
+  </div>
+</div>
+
+<!-- Formulário de reserva (inicialmente oculto) -->
+<div id="formReserva" style="display: none; margin-top: 20px;">
+    <!-- Campo para selecionar a data da reserva -->
+    <input type="date" id="reservaData" 
+           style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px;">
+    
+    <!-- Campo para informar o número de pessoas -->
+    <input type="number" id="reservaPessoas" placeholder="Número de pessoas" 
+           style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px;">
+    
+    <!-- Área para observações adicionais -->
+    <textarea id="reservaObservacoes" placeholder="Observações" 
+              style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; height: 60px;"></textarea>
+    
+    <!-- Botão para submeter a reserva -->
+    <button id="enviarReserva" 
+            style="background: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%;">
+        Confirmar Reserva
+    </button>
+</div>
+
+<script>
+// Script para controlar a exibição do formulário de reserva
+document.getElementById('showFormBtn').addEventListener('click', function() {
+    // Mostra o formulário de reserva
+    document.getElementById('formReserva').style.display = 'block';
+    
+    // Oculta a seção de ícones de contato alternativos
+    document.querySelector('.icones-reserva').style.display = 'none';
+});
+</script>
+
+<script>
+  /* =============================================
+     CONTROLE DO MODAL DO BLOG
+     ============================================= */
+  // Obtém referências aos elementos do modal
+  const blogModal = document.getElementById("blogModalBox");
+  const openBlogBtn = document.getElementById("openBlogModal");
+  const closeBlogBtn = blogModal.querySelector(".close");
+
+  // Configura o clique no botão de abrir o modal
+  openBlogBtn.onclick = function (e) {
+    e.preventDefault(); // Previne o comportamento padrão do link
+    blogModal.style.display = "block"; // Mostra o modal
+  }
+
+  // Configura o clique no botão de fechar
+  closeBlogBtn.onclick = function () {
+    blogModal.style.display = "none"; // Esconde o modal
+  }
+
+  // Fecha o modal ao clicar fora do conteúdo
+  window.onclick = function (event) {
+    if (event.target == blogModal) {
+      blogModal.style.display = "none";
+    }
+  }
+</script>
+
+<script>
+  /* =============================================
+     CONTROLE DE ROLAGEM HORIZONTAL DOS CARDS
+     ============================================= */
+  function scrollTours(direction, elementId) {
+    // Obtém o container de rolagem pelo ID
+    const scrollContainer = document.getElementById(elementId);
+    // Define a quantidade de rolagem (em pixels)
+    const scrollAmount = 200;
+    // Aplica a rolagem na direção especificada (1 = direita, -1 = esquerda)
+    scrollContainer.scrollLeft += direction * scrollAmount;
+  }
+</script>
+
+<script>
+  /* =============================================
+     ROLAGEM SUAVE PARA O RODAPÉ
+     ============================================= */
+  // Obtém o link de contato e adiciona o evento de clique
+  document.getElementById('contato-link').addEventListener('click', function(e) {
+    e.preventDefault(); // Previne o comportamento padrão do link
+    // Rola suavemente até o rodapé
+    document.getElementById('footer').scrollIntoView({
+      behavior: 'smooth' // Animação suave
+    });
+  });
+</script>
+
+<script>
+  document.querySelectorAll('.book-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const card = this.closest('.tour-card');
+        const tourTitle = card.querySelector('.tour-title').textContent;
+        const highlights = Array.from(card.querySelectorAll('.highlight-item'))
+                               .map(item => item.textContent.trim())
+                               .join('\n• ');
+        
+        // Atualiza o modal com informações completas
+        document.getElementById('passeioSelecionado').innerHTML = `
+            <strong>${tourTitle}</strong>
+            <div style="margin-top:8px;font-size:0.9em;color:#555;">
+                <i class="fas fa-info-circle"></i> ${highlights}
+            </div>
+        `;
+        
+        // Prepara mensagem detalhada para WhatsApp/Email
+        const mensagem = `Olá! Gostaria de reservar:
+        
+*${tourTitle}*
+
+• ${highlights.replace(/\n• /g, '\n• ')}
+
+Data pretendida: ______
+Número de pessoas: ______
+Outras observações: ______`;
+
+        // Configura links de contato
+        const whatsappBtn = document.getElementById('whatsappBtn');
+        const emailBtn = document.getElementById('emailBtn');
+        
+        whatsappBtn.href = `https://wa.me/+2389177161?text=${encodeURIComponent(mensagem)}`;
+        emailBtn.href = `mailto:leonardonardysc@gmail.com?subject=Reserva: ${encodeURIComponent(tourTitle)}&body=${encodeURIComponent(mensagem)}`;
+        
+        // Exibe o modal
+        document.getElementById('reservaModal').style.display = 'block';
+    });
+});
+</script>
+
+<script>
+    /* =============================================
+   CONTROLE DO MODAL DO BLOG
+   ============================================= */
+// Obtém referências aos elementos do modal
+const blogModal = document.getElementById("blogModalBox");
+const openBlogBtn = document.getElementById("openBlogModal");
+const closeBlogBtn = blogModal.querySelector(".close");
+
+// Configura o clique no botão de abrir o modal
+openBlogBtn.onclick = function (e) {
+    e.preventDefault(); // Previne o comportamento padrão do link
+    blogModal.style.display = "block"; // Mostra o modal
+}
+
+// Configura o clique no botão de fechar
+closeBlogBtn.onclick = function () {
+    blogModal.style.display = "none"; // Esconde o modal
+}
+
+// Fecha o modal ao clicar fora do conteúdo
+window.onclick = function (event) {
+    if (event.target == blogModal) {
+        blogModal.style.display = "none";
+    }
+}
+</script>
+
+<script>
+document.querySelectorAll('.icone-link').forEach(link => {
+    link.addEventListener('click', function() {
+        // Obtém o conteúdo do modal para poder modificá-lo
+        const modalContent = document.querySelector('#reservaModal .modal-content');
+        
+        // Substitui o conteúdo atual do modal por uma mensagem de confirmação
+        modalContent.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <!-- Ícone de confirmação (usando Font Awesome) -->
+                <i class="fas fa-check-circle" style="font-size: 50px; color: #4CAF50;"></i>
+                
+                <!-- Título da mensagem de confirmação -->
+                <h2>Solicitação Enviada!</h2>
+                
+                <!-- Mensagem explicativa para o usuário -->
+                <p>Entraremos em contato em breve para confirmar sua reserva.</p>
+                
+                <!-- Botão para fechar o modal -->
+                <button onclick="document.getElementById('reservaModal').style.display='none'" 
+                        style="background: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 4px; margin-top: 20px; cursor: pointer;">
+                    Fechar
+                </button>
+            </div>
+        `;
+    });
+});
+</script>
+
+
+
+<script>
+document.querySelector('#reservaModal span.close, #reservaModal .close-modal, #reservaModal .close').addEventListener('click', function() {
+    document.getElementById('reservaModal').style.display = 'none';
+});
+</script>
+
+<!-- MODAL DE RESERVA COMPLETO - SUBSTITUA TODO O MODAL EXISTENTE POR ESTE CÓDIGO -->
+<div id="reservaModal" class="modal">
+    <div class="modal-content" style="max-width: 500px; max-height: 90vh; display: flex; flex-direction: column;">
+        <!-- Cabeçalho do Modal -->
+        <div style="padding: 15px; border-bottom: 1px solid #eee; position: relative;">
+            <h2 style="margin: 0; text-align: center;">Reservar Passeio</h2>
+            <span class="close" onclick="fecharModal()" style="position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 24px;">&times;</span>
+        </div>
+        
+        <!-- Área de Conteúdo Rolável -->
+        <div style="overflow-y: auto; padding: 20px; flex-grow: 1;">
+            <!-- Resumo do Passeio Selecionado -->
+            <div id="resumoPasseio" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <!-- O título do passeio será inserido aqui via JavaScript -->
+            </div>
+            
+            <!-- Formulário de Reserva -->
+            <form id="formularioReserva">
+                <!-- Seção: Dados Pessoais -->
+                <div style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 15px; color: #2c3e50; font-size: 16px;">
+                        <i class="fas fa-user" style="margin-right: 8px;"></i> Seus Dados
+                    </h3>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">Nome Completo*</label>
+                        <input type="text" name="nome" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">E-mail*</label>
+                        <input type="email" name="email" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">Telefone/WhatsApp*</label>
+                        <input type="tel" name="telefone" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                    </div>
+                </div>
+                
+                <!-- Seção: Detalhes da Reserva -->
+                <div style="margin-bottom: 20px;">
+                    <h3 style="margin-bottom: 15px; color: #2c3e50; font-size: 16px;">
+                        <i class="fas fa-calendar-alt" style="margin-right: 8px;"></i> Detalhes da Reserva
+                    </h3>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">Data da Atividade*</label>
+                        <input type="date" name="data" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">Número de Pessoas*</label>
+                        <input type="number" name="pessoas" min="1" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">Forma de Pagamento*</label>
+                        <select name="pagamento" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                            <option value="">Selecione...</option>
+                            <option value="dinheiro">Dinheiro</option>
+                            <option value="mbway">MB Way</option>
+                            <option value="transferencia">Transferência Bancária</option>
+                            <option value="cartao">Cartão no Local</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Seção: Observações -->
+                <div style="margin-bottom: 25px;">
+                    <h3 style="margin-bottom: 15px; color: #2c3e50; font-size: 16px;">
+                        <i class="fas fa-edit" style="margin-right: 8px;"></i> Observações
+                    </h3>
+                    
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px;">Requisitos Especiais ou Observações</label>
+                        <textarea name="observacoes" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; height: 100px; font-size: 14px;"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Botão de Envio -->
+                <button type="submit" style="background: #e74c3c; color: white; border: none; padding: 12px; border-radius: 4px; width: 100%; cursor: pointer; font-weight: bold; font-size: 16px;">
+                    <i class="fas fa-paper-plane" style="margin-right: 8px;"></i> Enviar Reserva
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+/* =============================================
+   ESTILOS DO MODAL DE RESERVA - ADICIONE AO SEU CSS EXISTENTE
+   ============================================= */
+
+/* Efeito de abertura suave do modal */
+#reservaModal .modal-content {
+    animation: modalFadeIn 0.3s ease-out;
+    transform-origin: center top;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Configurações de scroll para o conteúdo do modal */
+#reservaModal .modal-content > div {
+    scrollbar-width: thin;
+    scrollbar-color: #e74c3c #f5f5f5;
+}
+
+/* Personalização da barra de scroll para navegadores WebKit */
+#reservaModal .modal-content > div::-webkit-scrollbar {
+    width: 6px;
+}
+
+#reservaModal .modal-content > div::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 3px;
+}
+
+#reservaModal .modal-content > div::-webkit-scrollbar-thumb {
+    background-color: #e74c3c;
+    border-radius: 3px;
+}
+
+/* Estilização dos campos do formulário */
+#reservaModal input,
+#reservaModal select,
+#reservaModal textarea {
+    transition: all 0.3s;
+    border: 1px solid #ddd !important;
+}
+
+#reservaModal input:focus,
+#reservaModal select:focus,
+#reservaModal textarea:focus {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+    outline: none;
+}
+
+/* Botão de envio com efeito hover */
+#reservaModal button[type="submit"] {
+    transition: all 0.3s;
+}
+
+#reservaModal button[type="submit"]:hover {
+    background: #c0392b !important;
+    transform: translateY(-2px);
+}
+</style>
+
+<script>
+/* =============================================
+   CONTROLE DO MODAL DE RESERVA - ADICIONE AO SEU JAVASCRIPT
+   ============================================= */
+
+/**
+ * Abre o modal de reserva com o passeio selecionado
+ * @param {string} tituloPasseio - Título do passeio que será reservado
+ */
+function abrirModalReserva(tituloPasseio) {
+    const modal = document.getElementById('reservaModal');
+    const resumo = document.getElementById('resumoPasseio');
+    
+    // Insere o título do passeio no cabeçalho do modal
+    resumo.innerHTML = `
+        <h3 style="margin: 0 0 5px 0; color: #e74c3c;">${tituloPasseio}</h3>
+        <p style="margin: 0; font-size: 14px; color: #555;">
+            <i class="fas fa-info-circle"></i> Preencha todos os campos para confirmar sua reserva
+        </p>
+    `;
+    
+    // Mostra o modal
+    modal.style.display = 'block';
+    
+    // Rola para o topo do modal (útil caso o modal seja reaberto)
+    modal.querySelector('.modal-content').scrollTop = 0;
+}
+
+/**
+ * Fecha o modal de reserva e reseta o formulário
+ */
+function fecharModal() {
+    const modal = document.getElementById('reservaModal');
+    modal.style.display = 'none';
+    document.getElementById('formularioReserva').reset();
+}
+
+// Adiciona evento de clique a todos os botões "Reservar Agora"
+document.querySelectorAll('.book-button').forEach(button => {
+    button.addEventListener('click', function() {
+        // Obtém o título do passeio do card clicado
+        const card = this.closest('.tour-card');
+        const titulo = card.querySelector('.tour-title').textContent;
+        
+        // Abre o modal com o título do passeio
+        abrirModalReserva(titulo);
+    });
+});
+
+// Fecha o modal ao clicar fora do conteúdo
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('reservaModal');
+    if (event.target === modal) {
+        fecharModal();
+    }
+});
+
+// Processa o formulário quando enviado
+document.getElementById('formularioReserva').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Coleta todos os dados do formulário
+    const formData = new FormData(this);
+    const dadosReserva = {};
+    formData.forEach((value, key) => {
+        dadosReserva[key] = value;
+    });
+    
+    // Obtém o título do passeio
+    const tituloPasseio = document.querySelector('#resumoPasseio h3').textContent;
+    
+    // Formata a mensagem para envio
+    let mensagem = `📌 *NOVA RESERVA* - ${tituloPasseio}\n\n`;
+    mensagem += `👤 *Cliente:* ${dadosReserva.nome}\n`;
+    mensagem += `📧 *E-mail:* ${dadosReserva.email}\n`;
+    mensagem += `📱 *Telefone:* ${dadosReserva.telefone}\n\n`;
+    mensagem += `📅 *Data:* ${dadosReserva.data}\n`;
+    mensagem += `👥 *Pessoas:* ${dadosReserva.pessoas}\n`;
+    mensagem += `💳 *Pagamento:* ${dadosReserva.pagamento}\n\n`;
+    mensagem += `📝 *Observações:* ${dadosReserva.observacoes || 'Nenhuma'}`;
+    
+    // Codifica a mensagem para URL (para envio por WhatsApp)
+    const mensagemCodificada = encodeURIComponent(mensagem);
+    
+    // Abre o WhatsApp com a mensagem pré-preenchida
+    window.open(`https://wa.me/+2389177161?text=${mensagemCodificada}`, '_blank');
+    
+    // Feedback visual para o usuário
+    alert('Reserva enviada com sucesso! Entraremos em contato para confirmação.');
+    
+    // Fecha o modal
+    fecharModal();
+});
+</script>
+
+
+<!-- 
+  =============================================
+  MODAL DE RESERVA - COM OPÇÕES DE CONFIRMAÇÃO
+  =============================================
+  Este modal tem duas etapas:
+  1. Formulário de reserva normal
+  2. Opções de como receber a confirmação (aparece após enviar)
+-->
+<div id="reservaModal" class="modal">
+  <div class="modal-content">
+    <!-- Botão de fechar o modal (X no canto superior direito) -->
+    <span class="close" onclick="fecharModal()">&times;</span>
+    
+    <!-- Título principal do modal -->
+    <h2>Reservar Passeio</h2>
+    
+    <!-- Área que mostra o resumo do passeio selecionado -->
+    <div id="resumoPasseio"></div>
+    
+    <!-- Formulário principal de reserva -->
+    <form id="formularioReserva">
+      <!-- Todos os campos do formulário ficariam aqui -->
+      <!-- ... -->
+      
+      <!-- ===== ETAPA 1: BOTÃO DE ENVIO NORMAL ===== -->
+      <div id="etapaEnvio">
+        <button type="submit" class="btn-enviar">
+          <i class="fas fa-paper-plane"></i> Enviar Reserva
+        </button>
+      </div>
+      
+      <!-- ===== ETAPA 2: OPÇÕES DE CONFIRMAÇÃO ===== --> 
+      <!-- (Inicialmente escondida, aparece após clicar em Enviar Reserva) -->
+      <div id="etapaConfirmacao" style="display:none; text-align:center;">
+        <h3><i class="fas fa-envelope"></i> Como deseja receber a confirmação?</h3>
+        
+        <!-- Opção 1: WhatsApp -->
+        <button onclick="enviarPorWhatsApp()" class="btn-whatsapp">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </button>
+        
+        <!-- Opção 2: E-mail -->
+        <button onclick="enviarPorEmail()" class="btn-email">
+          <i class="fas fa-envelope"></i> E-mail
+        </button>
+        
+        <!-- Opção 3: SMS -->
+        <button onclick="enviarPorSMS()" class="btn-sms">
+          <i class="fas fa-sms"></i> SMS
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// =============================================
+// CONTROLE DO FLUXO DE ENVIO
+// =============================================
+
+/**
+ * Evento quando o formulário é submetido (clicar em Enviar Reserva)
+ * Impede o envio tradicional e mostra as opções de confirmação
+ */
+document.getElementById('formularioReserva').addEventListener('submit', function(e) {
+  e.preventDefault(); // Impede o envio normal do formulário
+  
+  // Esconde o botão de envio e mostra as opções de confirmação
+  document.getElementById('etapaEnvio').style.display = 'none';
+  document.getElementById('etapaConfirmacao').style.display = 'block';
+});
+
+// =============================================
+// FUNÇÕES PARA CADA MÉTODO DE CONFIRMAÇÃO
+// =============================================
+
+/**
+ * Envia confirmação por WhatsApp
+ * Abre o WhatsApp com mensagem pré-formatada
+ */
+function enviarPorWhatsApp() {
+  const dados = coletarDadosFormulario(); // Pega dados do formulário
+  const mensagem = formatarMensagem(dados); // Formata a mensagem
+  // Abre o WhatsApp com número pré-definido e mensagem codificada
+  window.open(`https://wa.me/+2389177161?text=${encodeURIComponent(mensagem)}`, '_blank');
+  finalizarProcesso(); // Fecha o modal e limpa o formulário
+}
+
+/**
+ * Envia confirmação por E-mail
+ * Abre o cliente de e-mail padrão
+ */
+function enviarPorEmail() {
+  const dados = coletarDadosFormulario();
+  const mensagem = formatarMensagem(dados);
+  // Abre o cliente de e-mail com assunto e corpo pré-preenchidos
+  window.open(`mailto:leonardonardysc@gmail.com?subject=Reserva&body=${encodeURIComponent(mensagem)}`, '_blank');
+  finalizarProcesso();
+}
+
+/**
+ * Envia confirmação por SMS
+ * Abre o aplicativo de mensagens do dispositivo
+ */
+function enviarPorSMS() {
+  const dados = coletarDadosFormulario();
+  const mensagem = formatarMensagem(dados);
+  // Remove caracteres não numéricos do telefone
+  const numeroTel = dados.telefone.replace(/\D/g,'');
+  // Abre o app de SMS com número e mensagem pré-preenchidos
+  window.open(`sms:${numeroTel}?body=${encodeURIComponent(mensagem)}`, '_blank');
+  finalizarProcesso();
+}
+
+// =============================================
+// FUNÇÕES AUXILIARES
+// =============================================
+
+/**
+ * Coleta todos os dados do formulário e retorna como objeto
+ */
+function coletarDadosFormulario() {
+  const formData = new FormData(document.getElementById('formularioReserva'));
+  return Object.fromEntries(formData.entries());
+}
+
+/**
+ * Formata a mensagem de confirmação padrão
+ */
+function formatarMensagem(dados) {
+  return `Nova Reserva:\n\nNome: ${dados.nome}\nTelefone: ${dados.telefone}\nData: ${dados.data}\nPessoas: ${dados.pessoas}\n\nObservações: ${dados.observacoes || 'Nenhuma'}`;
+}
+
+/**
+ * Fecha o modal e reseta o formulário
+ */
+function finalizarProcesso() {
+  alert('Confirmação enviada com sucesso!');
+  document.getElementById('reservaModal').style.display = 'none';
+  document.getElementById('formularioReserva').reset();
+  
+  // Volta para a etapa inicial (caso o modal seja reaberto)
+  document.getElementById('etapaEnvio').style.display = 'block';
+  document.getElementById('etapaConfirmacao').style.display = 'none';
+}
+
+/**
+ * Fecha o modal
+ */
+function fecharModal() {
+  document.getElementById('reservaModal').style.display = 'none';
+}
+</script>
+
+<style>
+/* =============================================
+   ESTILOS DOS BOTÕES
+   ============================================= */
+
+/* Botão principal de envio */
+.btn-enviar {
+  background: #e74c3c; /* Vermelho */
+  color: white;
+  padding: 12px;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+}
+
+/* Botão do WhatsApp */
+.btn-whatsapp { 
+  background: #25D366; /* Verde do WhatsApp */
+  color: white; 
+}
+
+/* Botão de E-mail */
+.btn-email { 
+  background: #3498db; /* Azul */
+  color: white; 
+}
+
+/* Botão de SMS */
+.btn-sms { 
+  background: #2ecc71; /* Verde claro */
+  color: white; 
+}
+
+/* Estilos comuns para todos os botões de confirmação */
+.btn-whatsapp, .btn-email, .btn-sms {
+  padding: 12px;
+  width: 100%;
+  margin: 5px 0;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+</style>
+
+
+<!-- Efeito Bolhas Flutuantes -->
+<div class="bubbles-container" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; overflow:hidden;"></div>
+
+<style>
+  .bubble {
+    position:absolute;
+    border-radius:50%;
+    background:rgba(255,255,255,0.1);
+    box-shadow:0 0 10px rgba(255,255,255,0.2), inset 0 0 5px rgba(255,255,255,0.1);
+    animation:float linear infinite;
+    opacity:0;
+  }
+  @keyframes float {
+    0% { transform:translateY(100vh) scale(0.5); opacity:0; }
+    10% { opacity:0.3; }
+    90% { opacity:0.3; }
+    100% { transform:translateY(-100px) scale(1.2); opacity:0; }
+  }
+</style>
+
+<script>
+  (function() {
+    const container = document.querySelector('.bubbles-container');
+    const colors = ['rgba(100,200,255,0.3)', 'rgba(255,150,200,0.3)', 'rgba(150,255,180,0.3)'];
+    
+    function createBubble() {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      const size = Math.random() * 60 + 20;
+      const left = Math.random() * 100;
+      const duration = Math.random() * 10 + 15;
+      
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.left = `${left}%`;
+      bubble.style.animationDuration = `${duration}s`;
+      bubble.style.background = colors[Math.floor(Math.random() * colors.length)];
+      
+      container.appendChild(bubble);
+      
+      // Remove a bolha após a animação para performance
+      setTimeout(() => bubble.remove(), duration * 1000);
+    }
+    
+    // Cria bolhas periodicamente
+    setInterval(createBubble, 800);
+    // Preenche inicialmente
+    for(let i=0; i<15; i++) {
+      setTimeout(createBubble, i * 300);
+    }
+  })();
+</script>
+
+</body>
+</html>
